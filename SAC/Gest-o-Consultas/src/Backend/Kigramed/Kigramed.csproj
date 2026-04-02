@@ -14,8 +14,10 @@
 
   <ItemGroup>
     <Folder Include="K02.Infra\Data\" />
+    <Folder Include="K02.Infra\Reporitory\Cliente\" />
     <Folder Include="K02.Infra\Reporitory\Ferfil\" />
     <Folder Include="K02.Infra\Reporitory\Funcionario\" />
+    <Folder Include="K02.Infra\Reporitory\Paciente\" />
     <Folder Include="K03.Application\" />
     <Folder Include="K04.Domain\D01.Perfil\" />
     <Folder Include="K04.Domain\D02.Funcionario\" />
