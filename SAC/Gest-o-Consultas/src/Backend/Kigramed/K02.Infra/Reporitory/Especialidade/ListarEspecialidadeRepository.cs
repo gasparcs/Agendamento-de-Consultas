@@ -10,7 +10,10 @@ public class ListarEspecialidadeRepository(KigramedDbContext context) : IListage
 {
     public async Task<IEnumerable<EspecialidadeModel>> Listagem()
     {
-         var especialidade =await context.Tabelatb06_especialidade.Include(c =>c.MedicoEspecialidades).Include(s =>s.Servicos).ToListAsync();
+         var especialidade =await context.Tabelatb06_especialidade
+         .Include(c =>c.MedicoEspecialidades)
+         .Include(s =>s.Servicos)
+         .ToListAsync();
         return especialidade;
     }
 }

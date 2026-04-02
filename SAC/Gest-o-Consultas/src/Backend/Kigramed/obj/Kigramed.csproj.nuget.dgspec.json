@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj": {}
+    "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj": {
+    "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
         "projectName": "Kigramed",
-        "projectPath": "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
+        "projectPath": "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

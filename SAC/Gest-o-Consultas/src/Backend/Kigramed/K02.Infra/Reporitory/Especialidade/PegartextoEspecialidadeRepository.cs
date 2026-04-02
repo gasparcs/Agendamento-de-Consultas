@@ -11,6 +11,10 @@ public class PegartextoEspecialidadeRepository(KigramedDbContext context) : IPeg
 {
     public async Task<IEnumerable<EspecialidadeModel>> PegarAsync(string texto)
     {
-        return await context.Tabelatb06_especialidade.Where(t => t.Nome.Contains(texto)).Include(p=> p.Servicos).Include(c => c.MedicoEspecialidades).ToListAsync();
+        return await context.Tabelatb06_especialidade
+        .Where(t => t.Nome.Contains(texto))
+        .Include(p=> p.Servicos)
+        .Include(c => c.MedicoEspecialidades)
+        .ToListAsync();
     }
 }

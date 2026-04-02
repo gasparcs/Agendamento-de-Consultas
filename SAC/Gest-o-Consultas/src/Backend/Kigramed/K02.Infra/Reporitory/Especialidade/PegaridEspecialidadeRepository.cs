@@ -10,7 +10,10 @@ public class PegaridEspecialidadeRepository(KigramedDbContext context) : IPegarp
 {
     public async  Task<EspecialidadeModel> PegarAsync(int id)
     {
-        return await context.Tabelatb06_especialidade.Include(n =>n.Servicos).Include(p =>p.MedicoEspecialidades).FirstAsync(s =>s.Id ==id);
+        return await context.Tabelatb06_especialidade
+        .Include(n =>n.Servicos)
+        .Include(p =>p.MedicoEspecialidades)
+        .FirstAsync(s =>s.Id ==id);
          
     }
 }

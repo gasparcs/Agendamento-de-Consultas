@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Kigramed")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52c1c0c5380db99a3e06b4be62417375aa6994c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8b249e4160c69a07aa1a4914aad1adba0f9d2e26")]
 [assembly: System.Reflection.AssemblyProductAttribute("Kigramed")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Kigramed")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

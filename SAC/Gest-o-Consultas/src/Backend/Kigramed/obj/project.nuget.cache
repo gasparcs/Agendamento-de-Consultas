@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Om+fipPSvcA=",
+  "dgSpecHash": "lFfpM2Y20dE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\HP\\Desktop\\SAC\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
+  "projectFilePath": "C:\\Users\\HP\\Documents\\GitHub\\Agendamento-de-Consultas\\SAC\\Gest-o-Consultas\\src\\Backend\\Kigramed\\Kigramed.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.4\\microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.4\\microsoft.entityframeworkcore.10.0.4.nupkg.sha512",
