@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="K02.Infra\Data\" />
+    <Folder Include="K02.Infra\Reporitory\Ferfil\" />
+    <Folder Include="K02.Infra\Reporitory\Funcionario\" />
+    <Folder Include="K03.Application\" />
+    <Folder Include="K04.Domain\D01.Perfil\" />
+    <Folder Include="K04.Domain\D02.Funcionario\" />
+    <Folder Include="K04.Domain\D03.TipoContacto\" />
+    <Folder Include="K04.Domain\D04.Contacto\" />
+    <Folder Include="K04.Domain\D05.Auth\" />
+    <Folder Include="K04.Domain\D06.Especialidade\" />
+    <Folder Include="K04.Domain\D07.MedicoEspecialidade\" />
+    <Folder Include="K04.Domain\D08.Servico\" />
+    <Folder Include="K04.Domain\D09.Cliente\" />
+    <Folder Include="K04.Domain\D10.Genero\" />
+    <Folder Include="K04.Domain\D11.ClientePaciente\" />
+    <Folder Include="K04.Domain\D12.Paciente\" />
+    <Folder Include="K04.Domain\D13.EstadoConsulta\" />
+    <Folder Include="K04.Domain\D14.Pagamento\" />
+    <Folder Include="K04.Domain\D15.Consulta\" />
+    <Folder Include="K04.Domain\D16.Permissao\" />
+    <Folder Include="K04.Domain\D17.PerfilPermissao\" />
+    <Folder Include="K04.Domain\D18.PagamentoConsulta\" />
+    <Folder Include="K04.Domain\D19.MedicoConsulta\" />
+  </ItemGroup>
+
+</Project>
