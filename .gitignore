@@ -1,0 +1,19 @@
+# Ignore build folders
+**/bin/
+**/obj/
+
+# VS Code
+.vscode/
+
+# Visual Studio / Rider
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.idea/
+
+# NuGet
+*.nupkg
+project.assets.json
+*.nuget.props
+*.nuget.targets
