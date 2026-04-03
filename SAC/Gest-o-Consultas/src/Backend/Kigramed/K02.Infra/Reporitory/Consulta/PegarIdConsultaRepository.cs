@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kigramed.K02.Infra.Reporitory.Consulta;
 
-public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepository<ConsultaModel>
+public class PegarIdConsultaRepository(KigramedDbContext context) : IPegarpeloId<ConsultaModel>
 {
-    public async Task<IEnumerable<ConsultaModel>> Listagem()
+    public async Task<ConsultaModel?> PegarAsync(int id)
     {
-       var consultas= await context.Tabelatb15_consulta
+        return await context.Tabelatb15_consulta
         .Include(me=>me.MedicoConsulta)
         .Include(s=>s.Servico)
         .Include(p=>p.Paciente)
-        .ToListAsync();
-        return consultas;
+        .FirstAsync(c=>c.Id==id);
     }
 }
