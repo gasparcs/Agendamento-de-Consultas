@@ -10,7 +10,9 @@ public class ListarPerfilRepository(KigramedDbContext context) : IListagemReposi
 {
     public async Task<IEnumerable<PerfilModel>> Listagem()
     {
-         var perfis = await context.Tabelatb01_perfil.Include(f =>f.Funcionarios).ToListAsync();
+         var perfis = await context.Tabelatb01_perfil.Include(f =>f.Funcionarios)
+         .Include(pf=>pf.PerfisPermissoes)
+         .ToListAsync();
          return perfis;
          
     }
