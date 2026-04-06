@@ -11,7 +11,6 @@ public class ListarFuncionarioRepository(KigramedDbContext context) : IListagemR
     public async Task<IEnumerable<FuncionarioModel>> Listagem()
     {
         var funcionarios =await context.Tabelatb02_funcionario.Include(n =>n.Perfil).Include(c =>c.Contactos)
-        .Include(me=>me.MedicoEspecialidades)
         .ToListAsync();
         return funcionarios;
     }
