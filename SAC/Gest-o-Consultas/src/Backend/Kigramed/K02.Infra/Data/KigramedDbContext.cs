@@ -86,6 +86,7 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
        modelBuilder.Entity<MedicoEspecilidadeModel>( entity =>
        {
            entity.HasMany(me => me.MedicoConsultas).WithOne(mc => mc.MedicoEspecialidade).HasForeignKey(fk => fk.Id_medico_especialidade);
+           entity.HasMany(me=>me.Consultas).WithOne(c=>c.MedicoEspecialidade).HasForeignKey(fk=> fk.Id_medico_especialiade);
        });
 
        modelBuilder.Entity<ServicoModel>( entity =>

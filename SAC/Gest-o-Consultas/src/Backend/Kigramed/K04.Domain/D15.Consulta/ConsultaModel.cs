@@ -39,4 +39,6 @@ public class ConsultaModel
 
     public PagamentoConsultaModel PagamentoConsulta{ get; set; }=null!;
 
+    public MedicoEspecilidadeModel MedicoEspecialidade{get;set;}=null!;
+
 }

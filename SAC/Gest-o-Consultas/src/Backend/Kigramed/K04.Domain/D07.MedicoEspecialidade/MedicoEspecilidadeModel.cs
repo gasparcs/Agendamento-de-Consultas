@@ -24,4 +24,6 @@ public class MedicoEspecilidadeModel
 
     public ICollection<MedicoConsultaModel> MedicoConsultas{get;set;}=null!;
 
+    public ICollection<ConsultaModel> Consultas {get;set;}=null!;
+
 }
