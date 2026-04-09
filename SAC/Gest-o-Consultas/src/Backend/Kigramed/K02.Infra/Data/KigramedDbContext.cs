@@ -51,6 +51,7 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
         modelBuilder.Entity<PerfilModel>(entity =>
         {
             entity.HasMany(pf =>pf.Funcionarios).WithOne(f =>f.Perfil).HasForeignKey(fk =>fk.Id_Perfil);
+
             entity.HasMany(pf =>pf.PerfisPermissoes).WithOne(pp =>pp.Perfil).HasForeignKey(fk =>fk.Id_perfil);
         });
 
@@ -86,6 +87,7 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
        modelBuilder.Entity<MedicoEspecilidadeModel>( entity =>
        {
            entity.HasMany(me => me.MedicoConsultas).WithOne(mc => mc.MedicoEspecialidade).HasForeignKey(fk => fk.Id_medico_especialidade);
+
            entity.HasMany(me=>me.Consultas).WithOne(c=>c.MedicoEspecialidade).HasForeignKey(fk=> fk.Id_medico_especialiade);
        });
 
@@ -124,6 +126,21 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
           modelBuilder.Entity<PagamentoModel>( entity =>
          {
               entity.HasMany(p => p.PagamentoConsultas).WithOne(pc => pc.Pagamento).HasForeignKey(fk => fk.Id_Pagamento);
-         });
+        });
+
+        modelBuilder.Entity<PermissaoModel>( entity =>
+        {
+              entity.HasMany(p => p.PerfisPermissoes).WithOne(pp => pp.Permissao).HasForeignKey(fk => fk.UUID_permissao);
+        });
+
+        modelBuilder.Entity<PagamentoConsultaModel>( entity =>
+        {
+                 entity.HasOne(pc => pc.Consulta).WithOne(c => c.PagamentoConsulta).HasForeignKey<PagamentoConsultaModel>(fk => fk.Id_Consulta);
+        });
+
+        modelBuilder.Entity<MedicoConsultaModel>( entity =>
+        {
+                 entity.HasOne(mc => mc.Consulta).WithOne(c => c.MedicoConsulta).HasForeignKey<MedicoConsultaModel>(fk => fk.Id_consulta);
+        });
     }
 }
