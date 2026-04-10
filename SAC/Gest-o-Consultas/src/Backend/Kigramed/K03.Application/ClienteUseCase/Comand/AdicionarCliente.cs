@@ -12,6 +12,7 @@ public class AdicionarCliente(IAdicionarRepository<ClienteModel> repository)
         var model = new ClienteModel
         {
             Nome = dto.ClienteNome,
+            
             Nif_cliente = dto.ClienteNif
 
         };
