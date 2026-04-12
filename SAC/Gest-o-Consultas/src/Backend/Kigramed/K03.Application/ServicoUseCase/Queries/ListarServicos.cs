@@ -17,7 +17,11 @@ public class ListarServicos(IListagemRepository<ServicoModel> repository)
 
             ServicoPreco = s.Preco,
 
-          
+            Especialidades = new EspecialidadeDTO
+            {
+                Nome = s.Especialidade.Nome
+            }
+
         });
     }
 }
