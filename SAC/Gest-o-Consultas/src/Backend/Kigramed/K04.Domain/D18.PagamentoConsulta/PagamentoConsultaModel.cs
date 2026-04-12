@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D14.Consulta;
 using Kigramed.K04.Domain.D14.Pagamento;
@@ -7,6 +8,7 @@ namespace Kigramed.K04.Domain.D18.PagamentoConsulta;
 [Table("tb18_pagamento_consulta")]
 public class PagamentoConsultaModel
 {
+    [Key]
     [Column("id")]
     public int Id{get;set;}
 

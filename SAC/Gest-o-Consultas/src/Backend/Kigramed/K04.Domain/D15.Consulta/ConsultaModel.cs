@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D07.MedicoEspecialidade;
 using Kigramed.K04.Domain.D08.Servico;
@@ -11,6 +12,7 @@ namespace Kigramed.K04.Domain.D14.Consulta;
 [Table("tb14_consulta")]
 public class ConsultaModel
 {
+    [Key]
     [Column("id")]
     public int Id{ get; set; }
     

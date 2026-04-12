@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D02.Funcionario;
 
@@ -6,6 +7,7 @@ namespace Kigramed.K04.Domain.D05.Auth;
 [Table("tb05_auth")]
 public class AuthModel
 {
+    [Key]
     [Column("nif_funcionario")]
     public string Nif_funcionario { get; set; } = string.Empty;
 

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 using Kigramed.K04.Domain.D04.Contacto;
@@ -8,6 +9,7 @@ namespace Kigramed.K04.Domain.D03.TipoContacto;
 
 public class TipoContactoModel
 {
+    [Key]
     [Column("id")]
     public int Id{ get; set; }
 

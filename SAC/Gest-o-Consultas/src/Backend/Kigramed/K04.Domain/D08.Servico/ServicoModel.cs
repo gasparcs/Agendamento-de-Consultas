@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D06.Especialidade;
 using Kigramed.K04.Domain.D14.Consulta;
@@ -7,6 +8,7 @@ namespace Kigramed.K04.Domain.D08.Servico;
 [Table("tb08_servico")]
 public class ServicoModel
 {
+    [Key]
     [Column("id")]
     public int Id{get;set;}
 
