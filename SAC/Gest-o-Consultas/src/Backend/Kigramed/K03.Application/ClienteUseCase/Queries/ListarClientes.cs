@@ -19,8 +19,12 @@ public class ListarClientes(IListagemRepository<ClienteModel> repository)
 
             Contactos = c.Contactos.Select( ct => new ContactoDTO
                 {
-                    Contacto = ct.Contacto
+                    TipoContacto = new TipoContactoDTO
+                    {
+                        Descricao = ct.TipoContacto.Descricao
+                    },
 
+                    Contacto = ct.Contacto
                 }),
             
             Pacientes = c.Pacientes.Select(p => new PacienteDTO

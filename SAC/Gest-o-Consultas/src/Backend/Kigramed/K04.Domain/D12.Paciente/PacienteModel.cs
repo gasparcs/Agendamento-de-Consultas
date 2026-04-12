@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 using Kigramed.K04.Domain.D09.Cliente;
@@ -10,6 +11,7 @@ namespace Kigramed.K04.Domain.D12.Paciente;
 [Table("tb12_paciente")]
 public class PacienteModel
 {
+    [Key]
     [Column("id")]
     public int Id{get;set;}
 

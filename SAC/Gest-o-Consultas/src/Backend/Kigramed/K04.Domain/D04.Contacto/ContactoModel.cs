@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D03.TipoContacto;
@@ -8,6 +9,7 @@ namespace Kigramed.K04.Domain.D04.Contacto;
 [Table("tb04_contacto")]
 public class ContactoModel
 {
+    [Key]
     [Column("id")]
     public int Id { get; set; }
 
@@ -15,7 +17,7 @@ public class ContactoModel
     public string Nif_funcionario { get; set; } = string.Empty;
 
     [Column("id_tipo_contacto")]
-    public string Id_tipo_contacto { get; set; } = string.Empty;
+    public int Id_tipo_contacto { get; set; } 
 
     [Column("nif_cliente")]
     public string Nif_cliente { get; set; } = string.Empty;

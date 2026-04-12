@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 using Kigramed.K04.Domain.D01.Perfil;
@@ -11,6 +12,7 @@ namespace Kigramed.K04.Domain.D02.Funcionario;
 [Table("tb02_funcionario")]
 public class FuncionarioModel
 {
+    [Key]
     [Column("nif")]
     public String Nif { get; set; } = string.Empty;
 

@@ -6,13 +6,13 @@ public class LeituraServicoDTO
 {
   public string ServicoNome{get;set;}=string.Empty;
 
-   public decimal ServicoPreco{get;set;}
+   public decimal ServicoPreco{get;set;} 
 
- public IEnumerable<EspecialidadeDTO> Especialidades {get;set;}=[];
+ public EspecialidadeDTO Especialidades {get;set;} =null!;
 }
 
 
 public class EspecialidadeDTO
 {
-  public string Especialidade{get;set;}=string.Empty;
+  public string Nome {get;set;}=string.Empty;
 }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D04.Contacto;
 using Kigramed.K04.Domain.D12.Paciente;
@@ -8,6 +9,7 @@ namespace Kigramed.K04.Domain.D09.Cliente;
 [Table("tb09_cliente")]
 public class ClienteModel
 {
+    [Key]
     [Column("nif_cliente")]
     public string Nif_cliente { get; set; } = string.Empty;
 

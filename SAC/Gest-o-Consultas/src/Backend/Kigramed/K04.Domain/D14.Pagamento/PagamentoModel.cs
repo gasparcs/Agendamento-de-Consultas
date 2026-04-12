@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D09.Cliente;
@@ -8,11 +9,12 @@ namespace Kigramed.K04.Domain.D14.Pagamento;
     [Table("tb14_pagamento")]
 public class PagamentoModel
 {
+    [Key]
     [Column("id")]
     public int Id{get;set;}
 
     [Column("id_cliente")]
-    public int Id_cliente{get;set;}
+    public string Id_cliente{get;set;} = string.Empty;
 
     [Column("id_secretaria")]
     public string Nif_funcionario{get;set;}=string.Empty;
