@@ -10,7 +10,7 @@ public class AtualizarClienteRepository(KigramedDbContext context) : IActualizar
 {
     public async Task<string> ActualizarAsync(ClienteModel model)
     {
-        var cliente = await context.Tabelatb09_cliente.FirstOrDefaultAsync(f=> f.Nif_cliente == model.Nif_cliente||f.Nome==model.Nome); 
+        var cliente = await context.Tabelatb09_cliente.FirstOrDefaultAsync(f=> f.Nif_cliente == model.Nif_cliente); 
         if(cliente is null) return "Cliente não encontrado";
         cliente.Nome = model.Nome;
          return await context.SaveChangesAsync() > 0 ?
