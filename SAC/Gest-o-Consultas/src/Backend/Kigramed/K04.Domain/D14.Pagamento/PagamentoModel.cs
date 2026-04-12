@@ -14,7 +14,7 @@ public class PagamentoModel
     public int Id{get;set;}
 
     [Column("id_cliente")]
-    public int Id_cliente{get;set;}
+    public string Id_cliente{get;set;} = string.Empty;
 
     [Column("id_secretaria")]
     public string Nif_funcionario{get;set;}=string.Empty;

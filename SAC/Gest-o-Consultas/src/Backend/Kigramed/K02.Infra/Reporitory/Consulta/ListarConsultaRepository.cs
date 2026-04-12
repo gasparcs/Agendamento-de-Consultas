@@ -14,6 +14,7 @@ public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepo
         .Include(me=>me.MedicoConsulta)
         .Include(s=>s.Servico)
         .Include(p=>p.Paciente)
+        .Include(e=> e.EstadoConsulta)
         .ToListAsync();
         return consultas;
     }
