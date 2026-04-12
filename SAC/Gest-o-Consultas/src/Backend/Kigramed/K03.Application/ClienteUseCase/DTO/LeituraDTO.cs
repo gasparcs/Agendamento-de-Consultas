@@ -9,13 +9,21 @@ public class LeituraDTO
 
     public string ClienteNome {get;set;} = string.Empty;
 
+    
     public IEnumerable<ContactoDTO> Contactos {get;set;} = [];
 
     public IEnumerable<PacienteDTO> Pacientes {get;set;} = [];
 }
 
+
+public class TipoContactoDTO
+{
+    public string Descricao {get;set;} = string.Empty;
+}
+
 public class ContactoDTO
 {
+    public TipoContactoDTO TipoContacto {get; set;} = null!;
     public string Contacto {get;set;} = string.Empty;
 }
 

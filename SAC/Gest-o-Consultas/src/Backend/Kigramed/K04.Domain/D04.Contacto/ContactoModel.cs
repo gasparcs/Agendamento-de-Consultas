@@ -15,7 +15,7 @@ public class ContactoModel
     public string Nif_funcionario { get; set; } = string.Empty;
 
     [Column("id_tipo_contacto")]
-    public string Id_tipo_contacto { get; set; } = string.Empty;
+    public int Id_tipo_contacto { get; set; } 
 
     [Column("nif_cliente")]
     public string Nif_cliente { get; set; } = string.Empty;
