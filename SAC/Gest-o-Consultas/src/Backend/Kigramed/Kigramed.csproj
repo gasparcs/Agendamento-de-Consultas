@@ -32,6 +32,9 @@
     <Folder Include="K03.Application\FuncionarioUseCase\Command\" />
     <Folder Include="K03.Application\FuncionarioUseCase\DTO\" />
     <Folder Include="K03.Application\FuncionarioUseCase\Queries\" />
+    <Folder Include="K03.Application\PacienteUseCase\Comand\" />
+    <Folder Include="K03.Application\PacienteUseCase\DTO\" />
+    <Folder Include="K03.Application\Perfil\DTO\" />
     <Folder Include="K03.Application\ServicoUseCase\Comand\" />
     <Folder Include="K03.Application\ServicoUseCase\Queries\" />
     <Folder Include="K04.Domain\D01.Perfil\" />
