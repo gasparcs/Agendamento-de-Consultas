@@ -13,7 +13,7 @@ public class ServicoModel
     public int Id{get;set;}
 
     [Column("id_especialidade")]
-    public string Id_especialidade{get;set;}=string.Empty;
+    public int Id_especialidade{get;set;}
 
     [Column("nome")]
     public string Nome{get;set;}=string.Empty;

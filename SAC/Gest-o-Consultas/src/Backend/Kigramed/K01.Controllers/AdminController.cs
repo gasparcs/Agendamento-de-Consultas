@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kigramed.K01.Controllers
-{
+{  
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController (AdicionarCliente adicionarServices): ControllerBase
@@ -13,7 +13,7 @@ namespace Kigramed.K01.Controllers
         public async Task<IActionResult> AdicionarCliente(AdicionarClienteDTO dto)
         {
             if(
-                ModelState.IsValid
+                !ModelState.IsValid
             )
             return StatusCode(400, ModelState);
             var resposta = await adicionarServices.ExecuteAsync(dto);
