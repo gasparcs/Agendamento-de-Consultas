@@ -9,6 +9,7 @@ using Kigramed.K02.Infra.Reporitory.Paciente;
 using Kigramed.K02.Infra.Reporitory.Pagamento;
 using Kigramed.K02.Infra.Reporitory.Servico;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
+using Kigramed.K03.Application.ClienteUseCase.Queries;
 using Kigramed.K04.Domain.D01.Perfil;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D05.Auth;
@@ -85,6 +86,11 @@ builder.Services.AddScoped<IRemoverRepository<ServicoModel>, RemoverServicoRepos
 
 //casos de usos
 builder.Services.AddTransient<AdicionarCliente>();
+builder.Services.AddTransient<AtualizarCliente>();
+builder.Services.AddTransient<ListarClientes>();
+builder.Services.AddTransient<RemoverCliente>();
+builder.Services.AddTransient<PegarClientePeloNif>();
+builder.Services.AddTransient<PegarClientePeloTexto>();
 
 var app = builder.Build();
 

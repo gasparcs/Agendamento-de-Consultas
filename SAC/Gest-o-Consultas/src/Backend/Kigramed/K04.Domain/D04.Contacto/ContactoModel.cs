@@ -19,7 +19,7 @@ public class ContactoModel
     [Column("id_tipo_contacto")]
     public int Id_tipo_contacto { get; set; } 
 
-    [Column("nif_cliente")]
+    [Column("id_cliente")]
     public string Nif_cliente { get; set; } = string.Empty;
 
     [Column("contacto")]
