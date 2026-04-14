@@ -83,6 +83,7 @@ builder.Services.AddScoped<IPegarpeloId<ServicoModel>, PegarIdServicoRepository>
 builder.Services.AddScoped<IPegarpeloTextoRepository<ServicoModel>, PegarTextoServicoRepository>();
 builder.Services.AddScoped<IRemoverRepository<ServicoModel>, RemoverServicoRepository>();
 
+//casos de usos
 builder.Services.AddTransient<AdicionarCliente>();
 
 var app = builder.Build();
