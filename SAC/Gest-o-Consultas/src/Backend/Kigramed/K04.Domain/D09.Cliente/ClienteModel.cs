@@ -10,7 +10,7 @@ namespace Kigramed.K04.Domain.D09.Cliente;
 public class ClienteModel
 {
     [Key]
-    [Column("nif_cliente")]
+    [Column("nif")]
     public string Nif_cliente { get; set; } = string.Empty;
 
     [Column("nome")]
