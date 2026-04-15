@@ -10,6 +10,7 @@ using Kigramed.K02.Infra.Reporitory.Pagamento;
 using Kigramed.K02.Infra.Reporitory.Servico;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
+using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K04.Domain.D01.Perfil;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D05.Auth;
@@ -84,13 +85,16 @@ builder.Services.AddScoped<IPegarpeloId<ServicoModel>, PegarIdServicoRepository>
 builder.Services.AddScoped<IPegarpeloTextoRepository<ServicoModel>, PegarTextoServicoRepository>();
 builder.Services.AddScoped<IRemoverRepository<ServicoModel>, RemoverServicoRepository>();
 
-//casos de usos
+//casos de usos cliendemodel
 builder.Services.AddTransient<AdicionarCliente>();
 builder.Services.AddTransient<AtualizarCliente>();
 builder.Services.AddTransient<ListarClientes>();
 builder.Services.AddTransient<RemoverCliente>();
 builder.Services.AddTransient<PegarClientePeloNif>();
 builder.Services.AddTransient<PegarClientePeloTexto>();
+
+//casos de uso perfilmodel
+builder.Services.AddTransient<ListarPerfis>();
 
 var app = builder.Build();
 

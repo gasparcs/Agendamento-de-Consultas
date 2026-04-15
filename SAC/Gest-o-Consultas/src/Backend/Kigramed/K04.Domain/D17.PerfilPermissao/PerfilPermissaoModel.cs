@@ -5,14 +5,14 @@ using Kigramed.K04.Domain.D01.Perfil;
 using Kigramed.K04.Domain.D15.Permissao;
 
 namespace Kigramed.K04.Domain.D16.PerfilPermissao;
-[Table("tb16_perfil_permissoes")]
+[Table("tb17_perfil_permissoes")]
 public class PerfilPermissaoModel
 {
 [Key]
 [Column("id")]
 public int Id { get; set; }
 
-[Column("uuid_permissao")]
+[Column("uuid_permissoes")]
 public Guid UUID_permissao { get; set; }
 
 [Column("id_perfil")]
