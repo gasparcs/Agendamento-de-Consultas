@@ -11,7 +11,7 @@ public class ListarPerfilRepository(KigramedDbContext context) : IListagemReposi
     public async Task<IEnumerable<PerfilModel>> Listagem()
     {
          var perfis = await context.Tabelatb01_perfil.Include(f =>f.Funcionarios)
-         .Include(pf=>pf.PerfisPermissoes)
+         .Include(pf=>pf.PerfisPermissoes).ThenInclude(pp => pp.Permissao)
          .ToListAsync();
          return perfis;
          

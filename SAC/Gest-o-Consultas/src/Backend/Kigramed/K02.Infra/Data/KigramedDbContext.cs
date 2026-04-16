@@ -130,7 +130,7 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
 
         modelBuilder.Entity<PermissaoModel>( entity =>
         {
-              entity.HasMany(p => p.PerfisPermissoes).WithOne(pp => pp.Permissao).HasForeignKey(fk => fk.UUID_permissao);
+              entity.HasMany(p => p.PerfisPermissoes).WithOne(pp => pp.Permissao).HasForeignKey(fk => fk.UUID_permissao).HasPrincipalKey(p=>p.UUID);
         });
 
         modelBuilder.Entity<PagamentoConsultaModel>( entity =>

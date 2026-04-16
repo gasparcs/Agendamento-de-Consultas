@@ -8,7 +8,7 @@ namespace Kigramed.K04.Domain.D15.Permissao;
 public class PermissaoModel
 {
     [Key]
-    [Column("uuid")]
+    [Column("uuid_permissoes")]
     public Guid UUID { get; set; }
 
     [Column("descricao")]
