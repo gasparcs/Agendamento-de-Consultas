@@ -25,6 +25,7 @@ public class FuncionarioModel
     [Column("estado")]
     public bool Estado { get; set; }
 
+    [ForeignKey("Id_Perfil")]
     public PerfilModel Perfil { get; set; } = null!;
 
     public ICollection<ContactoModel> Contactos { get; set; } = [];

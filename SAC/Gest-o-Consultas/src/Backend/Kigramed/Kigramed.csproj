@@ -24,6 +24,10 @@
     <Folder Include="K02.Infra\Reporitory\Servico\" />
     <Folder Include="K03.Application\ClienteUseCase\Comand\" />
     <Folder Include="K03.Application\ClienteUseCase\DTO\" />
+    <Folder Include="K03.Application\FuncionarioUseCase\" />
+    <Folder Include="K03.Application\FuncionarioUseCase\Comand\" />
+    <Folder Include="K03.Application\FuncionarioUseCase\DTO\" />
+    <Folder Include="K03.Application\FuncionarioUseCase\Queries\" />
     <Folder Include="K03.Application\PerfilUseCase\" />
     <Folder Include="K03.Application\PerfilUseCase\DTO\" />
     <Folder Include="K03.Application\PerfilUseCase\Queries\" />
