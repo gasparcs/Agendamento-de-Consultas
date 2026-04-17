@@ -11,6 +11,7 @@ using Kigramed.K02.Infra.Reporitory.Servico;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
 using Kigramed.K03.Application.FuncionarioUseCase.Comand;
+using Kigramed.K03.Application.FuncionarioUseCase.Queries;
 using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K04.Domain.D01.Perfil;
 using Kigramed.K04.Domain.D02.Funcionario;
@@ -98,7 +99,8 @@ builder.Services.AddTransient<PegarClientePeloTexto>();
 builder.Services.AddTransient<ListarPerfis>();
 
 //casos de uso funcionariomodel
-builder.Services.AddTransient<AdicionarFuncionario>(); 
+builder.Services.AddTransient<AdicionarFuncionario>();
+builder.Services.AddTransient<ListarFuncionarios>(); 
 
 var app = builder.Build();
 

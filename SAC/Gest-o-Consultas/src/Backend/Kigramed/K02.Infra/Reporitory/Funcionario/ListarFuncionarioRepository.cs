@@ -10,7 +10,7 @@ public class ListarFuncionarioRepository(KigramedDbContext context) : IListagemR
 {
     public async Task<IEnumerable<FuncionarioModel>> Listagem()
     {
-        var funcionarios =await context.Tabelatb02_funcionario.Include(n =>n.Perfil).Include(c =>c.Contactos)
+        var funcionarios =await context.Tabelatb02_funcionario.Include(n =>n.Perfil).Include(c =>c.Contactos).ThenInclude(c=>c.TipoContacto)
         .ToListAsync();
         return funcionarios;
     }
