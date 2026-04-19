@@ -101,6 +101,10 @@ builder.Services.AddTransient<ListarPerfis>();
 //casos de uso funcionariomodel
 builder.Services.AddTransient<AdicionarFuncionario>();
 builder.Services.AddTransient<ListarFuncionarios>(); 
+builder.Services.AddTransient<PegarFuncionarioPeloNif>();
+builder.Services.AddTransient<PegarFuncionarioPeloTexto>();
+builder.Services.AddTransient<AtualizarFuncionario>();
+builder.Services.AddTransient<RemoverFuncionario>();
 
 var app = builder.Build();
 

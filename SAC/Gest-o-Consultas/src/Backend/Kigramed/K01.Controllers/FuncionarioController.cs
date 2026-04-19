@@ -10,7 +10,11 @@ namespace Kigramed.K01.Controllers
     [ApiController]
     public class FuncionarioController 
     (AdicionarFuncionario adicionarServices,
-    ListarFuncionarios listarServices)
+    ListarFuncionarios listarServices,
+    PegarFuncionarioPeloNif pegarnifServices,
+    PegarFuncionarioPeloTexto pegartextoServices,
+    AtualizarFuncionario atualizarServices,
+    RemoverFuncionario removerServices)
     : ControllerBase
     {
         [HttpPost]
@@ -31,5 +35,44 @@ namespace Kigramed.K01.Controllers
              var resposta = await listarServices.ExecuteAsync();
              return Ok(resposta);
         }
+
+        [HttpGet("nif/{nif}")] 
+        public async Task<IActionResult> PegarFuncionarioPeloNif(string nif)
+        {
+            var resposta = await pegarnifServices.ExecuteAsync(nif);
+            return resposta is null? StatusCode(404, "Funcionário não encontrado"):
+            Ok(resposta);
+        } 
+
+        [HttpGet("texto/{texto}")]
+        public async Task<IActionResult> PegarFuncionarioPeloTexto(string texto)
+        {
+            var resposta = await pegartextoServices.ExecuteAsync(texto);
+            return resposta is null? StatusCode(404, "Nenhum funcionário encontrado"):
+            Ok(resposta); 
+        } 
+
+        [HttpPut("{nif}")]
+         public async Task<IActionResult> AtualizarFuncionario(string nif, AtualizarFuncionarioDTO dto)
+        {
+            if (!ModelState.IsValid)
+            return StatusCode(400, ModelState);
+
+            dto.FuncionaioNif = nif;
+
+            var resposta = await atualizarServices.ExecuteAsync(dto);
+            return resposta.Contains("sucesso")? StatusCode(200, resposta)
+            : StatusCode(404, resposta);
+        }
+
+        [HttpDelete("{nif}")]
+        public async Task<IActionResult> RemoverFuncionario(string nif)
+        {
+            var resposta = await removerServices.ExecuteAsync(nif);
+            return resposta.Contains("sucesso") ? StatusCode(200, resposta):
+            StatusCode(404, resposta);
+        }
+
+
     }
 }

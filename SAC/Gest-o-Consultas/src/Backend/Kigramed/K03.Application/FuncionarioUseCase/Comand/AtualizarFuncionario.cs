@@ -5,10 +5,10 @@ using Kigramed.K04.Domain.D04.Contacto;
 using Kigramed.K04.Domain.Interfaces;
 
 namespace Kigramed.K03.Application.FuncionarioUseCase.Comand;
-
-public class AdicionarFuncionario(IAdicionarRepository<FuncionarioModel> repository)
+ 
+public class AtualizarFuncionario(IActualizarRepository<FuncionarioModel> repository)
 {
-    public async Task<string> ExecuteAsync(AdicionarFuncionarioDTO dto)
+    public async Task<string> ExecuteAsync(AtualizarFuncionarioDTO dto)
     {
         var model = new FuncionarioModel
         {
@@ -20,18 +20,15 @@ public class AdicionarFuncionario(IAdicionarRepository<FuncionarioModel> reposit
 
             Estado = dto.FuncionarioEstado,
 
-            Contactos = dto.Contactos.Select( c => new ContactoModel
+            Contactos= dto.Contactos.Select(c => new ContactoModel
             {
                 Id_tipo_contacto = c.TipoContacto,
 
-                Contacto = c.Contacto,
+                Contacto = c.Contacto
 
-                Nif_funcionario = dto.FuncionaioNif,
-
-                Nif_cliente = null
-            }).ToList()
+            }).ToList() 
         };
 
-        return await repository.AddAsync(model);
+        return await repository.ActualizarAsync(model);
     }
 }

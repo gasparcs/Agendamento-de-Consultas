@@ -13,11 +13,7 @@ public class ListrarFuncionarioDTO
     public bool FuncionaroEstado {get;set;} 
 
     public IEnumerable<ContactoDTO> Contactos {get;set;} = [];
-
-   
-
 }
-
 
 public class TipoContactoDTO
 {

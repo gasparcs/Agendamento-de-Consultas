@@ -13,7 +13,7 @@ public class AtualizarFuncionarioRepository(KigramedDbContext context) : IActual
         var funcionario = await context.Tabelatb02_funcionario.FirstOrDefaultAsync(f=> f.Nif == model.Nif||f.Nome==model.Nome); 
         if(funcionario is null) return "Funcionário não encontrado";
         funcionario.Nome = model.Nome;
-        funcionario.Perfil = model.Perfil;
+        funcionario.Id_Perfil = model.Id_Perfil;
          funcionario.Contactos = model.Contactos;
           funcionario.Estado = model.Estado;
          return await context.SaveChangesAsync() >0 ?

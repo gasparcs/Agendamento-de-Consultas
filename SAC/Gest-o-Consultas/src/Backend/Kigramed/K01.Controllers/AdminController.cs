@@ -55,7 +55,7 @@ namespace Kigramed.K01.Controllers
         public async Task<IActionResult> RemoverCliente(string nif)
         {
             var resposta = await removerServices.ExecuteAsync(nif);
-            return resposta.Contains("Sucesso") ? StatusCode(200, resposta):
+            return resposta.Contains("sucesso") ? StatusCode(200, resposta):
             StatusCode(404, resposta);
         }
 

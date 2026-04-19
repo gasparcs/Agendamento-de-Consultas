@@ -14,13 +14,13 @@ public class ContactoModel
     public int Id { get; set; }
 
     [Column("nif_funcionario")]
-    public string Nif_funcionario { get; set; } = string.Empty;
+    public string? Nif_funcionario { get; set; } = null;
 
     [Column("id_tipo_contacto")]
     public int Id_tipo_contacto { get; set; } 
 
     [Column("id_cliente")]
-    public string Nif_cliente { get; set; } = string.Empty;
+    public string? Nif_cliente { get; set; } = null;
 
     [Column("contacto")]
     public string Contacto { get; set; } = string.Empty;

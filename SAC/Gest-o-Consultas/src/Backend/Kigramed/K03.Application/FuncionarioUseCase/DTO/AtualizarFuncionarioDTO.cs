@@ -3,25 +3,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Kigramed.K03.Application.FuncionarioUseCase.DTO;
 
-public class AdicionarFuncionarioDTO
+public class AtualizarFuncionarioDTO
 {
-    [Required(ErrorMessage = "Nif é obrigatório")]
+   
     public string FuncionaioNif { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Perfil é obrigatório")]
     public int FuncionarioPerfil { get; set; }
 
-    [Required(ErrorMessage = "Nome é obrigatório")]
+    [Required(ErrorMessage = "O nome do funcionário é obrigatório.")]
     public string FuncionarioNome { get; set; } = string.Empty;
 
     public bool FuncionarioEstado { get; set; }
 
-   
-    [Required(ErrorMessage = "Contactos são obrigatórios")]
-    public IEnumerable<AdicionarContactoDTO> Contactos { get; set; } = [];
+    public IEnumerable<AtualizarContactoDTO> Contactos { get; set; } = [];
 }
 
-public class AdicionarContactoDTO
+public class AtualizarContactoDTO
 {
     public int TipoContacto { get; set; }
 
