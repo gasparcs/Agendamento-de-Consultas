@@ -9,6 +9,12 @@ public class RemoverClienteRepository(KigramedDbContext context) : IRemoverRepos
 {
     public async Task<string> RemoverAsync(ClienteModel model)
     {
+         var contactos = context.Tabelatb04_contato
+        .Where(c => c.Nif_cliente == model.Nif_cliente);
+    
+    context.Tabelatb04_contato.RemoveRange(contactos);
+    await context.SaveChangesAsync();
+
         context.Tabelatb09_cliente.Remove(model);
         return await context.SaveChangesAsync() >0 ?
         "Cliente removido com sucesso." :
