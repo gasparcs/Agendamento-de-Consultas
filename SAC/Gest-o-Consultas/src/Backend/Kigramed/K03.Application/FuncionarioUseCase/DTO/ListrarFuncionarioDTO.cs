@@ -6,7 +6,7 @@ public class ListrarFuncionarioDTO
 {
     public string FuncionarioNif {get;set;} = string.Empty;
 
-    public PerfilDTO FUncionarioPerfil {get;set;} = null!;
+    public string FUncionarioPerfil {get;set;} = null!;
 
     public string FuncionarioNome {get;set;} = string.Empty;
 
@@ -18,10 +18,6 @@ public class ListrarFuncionarioDTO
 
 }
 
-public class PerfilDTO
-{
-    public string Descricao {get;set;} = string.Empty;
-}
 
 public class TipoContactoDTO
 {

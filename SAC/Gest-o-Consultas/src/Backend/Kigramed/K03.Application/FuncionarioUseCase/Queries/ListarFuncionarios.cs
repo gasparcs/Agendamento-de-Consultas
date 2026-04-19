@@ -16,10 +16,8 @@ public class ListarFuncionarios(IListagemRepository<FuncionarioModel> repository
         {
             FuncionarioNif = f.Nif,
 
-            FUncionarioPerfil = new PerfilDTO
-            {
-                Descricao = f.Perfil.Descricao
-            },
+            FUncionarioPerfil = f.Perfil.Descricao,
+           
 
             FuncionarioNome = f.Nome,
 
