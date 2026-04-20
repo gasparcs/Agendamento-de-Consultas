@@ -15,6 +15,8 @@ public class AtualizarFuncionarioDTO
 
     public bool FuncionarioEstado { get; set; }
 
+     public IEnumerable<AtualizarFuncionarioEspecialidadeDTO> Especialidades { get; set; } = [];
+
     public IEnumerable<AtualizarContactoDTO> Contactos { get; set; } = [];
 }
 
@@ -23,4 +25,9 @@ public class AtualizarContactoDTO
     public int TipoContacto { get; set; }
 
     public string Contacto { get; set; } = string.Empty;
+}
+
+public class AtualizarFuncionarioEspecialidadeDTO
+{
+    public int IdEspecialidade { get; set; }
 }
