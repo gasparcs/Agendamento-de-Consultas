@@ -7,11 +7,11 @@ namespace Kigramed.K03.Application.FuncionarioUseCase.Queries;
 
 public class PegarFuncionarioPeloNif(IPegarpeloNifReporitory<FuncionarioModel> repository)
 {
-    public async Task<ListrarFuncionarioDTO> ExecuteAsync(string nif) 
+    public async Task<ListrarFuncionarioDTO ?> ExecuteAsync(string nif) 
     {
         var funcionario = await repository.PegarpeloNifAsync(nif);
 
-        if (funcionario is null) return null!;
+        if (funcionario is null) return null;
 
         return new ListrarFuncionarioDTO
         {

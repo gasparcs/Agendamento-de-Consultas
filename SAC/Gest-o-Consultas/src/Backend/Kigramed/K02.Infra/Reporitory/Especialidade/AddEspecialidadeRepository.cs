@@ -11,7 +11,7 @@ public class AddEspecialidadeRepository(KigramedDbContext context) : IAdicionarR
     {
        await context.Tabelatb06_especialidade.AddAsync(model);
         return await context.SaveChangesAsync() > 0 ?
-        "Funcionário cadastrado com sucesso" :
-        "Não foi possível cadastrar funcionário";
+        "Especialidade cadastrada com sucesso" :
+        "Não foi possível cadastrar especialidade";
     }
 }

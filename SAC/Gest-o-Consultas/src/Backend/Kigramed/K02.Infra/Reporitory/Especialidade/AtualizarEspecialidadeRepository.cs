@@ -10,7 +10,7 @@ public class AtualizarEspecialidadeRepository(KigramedDbContext context) : IActu
 {
     public async Task<string> ActualizarAsync(EspecialidadeModel model)
     {
-        var especialidade = await context.Tabelatb06_especialidade.FirstOrDefaultAsync(f=> f.Id == model.Id||f.Nome==model.Nome); 
+        var especialidade = await context.Tabelatb06_especialidade.FirstOrDefaultAsync(f=> f.Id == model.Id); 
         if(especialidade is null) return "Especialidade não encontrada";
         especialidade.Nome = model.Nome;
         especialidade.Descricao = model.Descricao;

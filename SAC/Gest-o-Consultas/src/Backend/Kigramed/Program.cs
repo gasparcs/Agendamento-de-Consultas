@@ -10,6 +10,8 @@ using Kigramed.K02.Infra.Reporitory.Pagamento;
 using Kigramed.K02.Infra.Reporitory.Servico;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
+using Kigramed.K03.Application.EspecialidadeUseCase.Comand;
+using Kigramed.K03.Application.EspecialidadeUseCase.Queries;
 using Kigramed.K03.Application.FuncionarioUseCase.Comand;
 using Kigramed.K03.Application.FuncionarioUseCase.Queries;
 using Kigramed.K03.Application.PerfilUseCase.Queries;
@@ -105,6 +107,14 @@ builder.Services.AddTransient<PegarFuncionarioPeloNif>();
 builder.Services.AddTransient<PegarFuncionarioPeloTexto>();
 builder.Services.AddTransient<AtualizarFuncionario>();
 builder.Services.AddTransient<RemoverFuncionario>();
+
+//casos de uso especialidademodel
+builder.Services.AddTransient<AdicionarEspecialidade>();
+builder.Services.AddTransient<AtualizarEspecialidade>();
+builder.Services.AddTransient<ListarEspecialidades>();
+builder.Services.AddTransient<PegarEspecialidadePeloId>();
+builder.Services.AddTransient<PegarEspecialidadePeloTexto>(); 
+builder.Services.AddTransient<RemoverEspecialidade>();
 
 var app = builder.Build();
 
