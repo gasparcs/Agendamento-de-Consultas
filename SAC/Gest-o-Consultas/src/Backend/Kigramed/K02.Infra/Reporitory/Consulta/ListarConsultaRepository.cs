@@ -11,9 +11,9 @@ public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepo
     public async Task<IEnumerable<ConsultaModel>> Listagem()
     {
        var consultas= await context.Tabelatb15_consulta
-        .Include(me=>me.MedicoConsulta)
+        .Include(me=>me.MedicoEspecialidade).ThenInclude(me => me.Funcionario)
         .Include(s=>s.Servico)
-        .Include(p=>p.Paciente)
+        .Include(p=>p.Paciente).ThenInclude(c=>c.Cliente)
         .Include(e=> e.EstadoConsulta)
         .ToListAsync();
         return consultas;

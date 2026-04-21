@@ -10,6 +10,8 @@ using Kigramed.K02.Infra.Reporitory.Pagamento;
 using Kigramed.K02.Infra.Reporitory.Servico;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
+using Kigramed.K03.Application.ConsultaUseCase.Comand;
+using Kigramed.K03.Application.ConsultaUseCase.Queries;
 using Kigramed.K03.Application.EspecialidadeUseCase.Comand;
 using Kigramed.K03.Application.EspecialidadeUseCase.Queries;
 using Kigramed.K03.Application.FuncionarioUseCase.Comand;
@@ -133,6 +135,10 @@ builder.Services.AddTransient<AdicionarPaciente>();
 builder.Services.AddTransient<AtualizarPaciente>();
 builder.Services.AddTransient<RemoverPaciente>();
 builder.Services.AddTransient<ListarPacientes>();
+
+//casos de uso consultamodel
+builder.Services.AddTransient<AdicionarConsulta>();
+builder.Services.AddTransient<ListarConsultas>();
 
 var app = builder.Build();
 
