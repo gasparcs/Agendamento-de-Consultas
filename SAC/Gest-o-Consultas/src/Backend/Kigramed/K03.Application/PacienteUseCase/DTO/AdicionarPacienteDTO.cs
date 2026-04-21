@@ -18,7 +18,7 @@ public class AdicionarPacienteDTO
    public int  IdCliente_Paciente {get;set;}
 
 
-   [Required(ErrorMessage ="O gêmero é obrigatório")]
+   [Required(ErrorMessage ="O gênero é obrigatório")]
    public int IdGenero {get;set;}
 
 }
