@@ -16,7 +16,7 @@ public class ConsultaModel
     [Column("id")]
     public int Id{ get; set; }
     
-    [Column("id_medico_especialidade")]
+    [Column("id_medico_especialista")]
     public int Id_medico_especialiade{ get; set; }
 
     [Column("id_servico")]
@@ -25,7 +25,7 @@ public class ConsultaModel
     [Column("id_paciente")]
     public int Id_paciente{ get; set; }
 
-    [Column("id_estado_consulta")]
+    [Column("id_estado")]
     public int Id_estado_consulta{ get; set; }
 
     [Column("data_consulta")]

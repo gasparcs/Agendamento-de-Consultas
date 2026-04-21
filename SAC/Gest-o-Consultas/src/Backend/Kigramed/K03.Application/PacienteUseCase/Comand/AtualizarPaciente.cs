@@ -11,8 +11,9 @@ public class AtualizarPaciente(IActualizarRepository<PacienteModel> repository)
     {
         var model = new PacienteModel
         {
-            Nome= dto.PacienteNome,
-            Data_nascimento= dto.PacienteData_Nascimento
+            Id = dto.IdPaciente,
+
+            Nome= dto.PacienteNome
         };
         return await repository.ActualizarAsync(model);
     }

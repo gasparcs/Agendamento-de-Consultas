@@ -4,11 +4,11 @@ namespace Kigramed.K03.Application.FuncionarioUseCase.DTO;
 
 public class ListrarFuncionarioDTO
 {
-    public string FuncionarioNif {get;set;} = string.Empty;
+    public string FuncionarioNif {get;set;} = null!;
 
     public string FUncionarioPerfil {get;set;} = null!;
 
-    public string FuncionarioNome {get;set;} = string.Empty;
+    public string FuncionarioNome {get;set;} = null!;
 
     public bool FuncionaroEstado {get;set;} 
 

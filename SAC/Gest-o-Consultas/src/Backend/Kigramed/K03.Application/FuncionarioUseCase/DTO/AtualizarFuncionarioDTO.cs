@@ -8,9 +8,9 @@ public class AtualizarFuncionarioDTO
    
     public string FuncionaioNif { get; set; } = string.Empty;
 
+
     public int FuncionarioPerfil { get; set; }
 
-    [Required(ErrorMessage = "O nome do funcionário é obrigatório.")]
     public string FuncionarioNome { get; set; } = string.Empty;
 
     public bool FuncionarioEstado { get; set; }

@@ -8,6 +8,5 @@ public class AtualizarClienteDTO
      [Required(ErrorMessage = "Nome é obrigatório")]
      public string ClienteNome{get;set;}=string.Empty;
 
-    [Required(ErrorMessage = "Nif é obrigatório")]
     public string ClienteNif{get;set;}=string.Empty;
 }

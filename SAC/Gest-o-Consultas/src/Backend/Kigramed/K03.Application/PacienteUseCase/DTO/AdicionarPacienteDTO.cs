@@ -7,29 +7,21 @@ namespace Kigramed.K03.Application.PacienteUseCase.DTO;
 
 public class AdicionarPacienteDTO
 {
-    [Required(ErrorMessage = "Nome é do paciente é obrigatório")]
-    
+   [Required(ErrorMessage = "Nome é do paciente é obrigatório")]
    public string PacienteNome{get;set;}=string.Empty;
 
    [Required(ErrorMessage = "Data de nascimento do paciente é obrigatório")]
    public DateTime PacienteData_nascimento{get;set;}
 
-   public AdicionarClienteDTO Cliente{get;set;}=null!;
-   public AdicionarCliente_PacienteDTO Cliente_Paciente{get;set;}=null!;
-   public AdicionarGeneroDTO  Genero{get;set;}=null!;
-   
+   public string IdCliente{get;set;} = string.Empty;
+
+   public int  IdCliente_Paciente {get;set;}
+
+
+   [Required(ErrorMessage ="O gêmero é obrigatório")]
+   public int IdGenero {get;set;}
 
 }
-public class AdicionarClienteDTO
-{
-    public int Id_cliente{get;set;}
-}
-public class AdicionarCliente_PacienteDTO
-{
-    public int Id_cliente_paciente{get;set;}
-}
-public class AdicionarGeneroDTO
-{
-    public int Id_genero{get;set;}
-}
+
+
 

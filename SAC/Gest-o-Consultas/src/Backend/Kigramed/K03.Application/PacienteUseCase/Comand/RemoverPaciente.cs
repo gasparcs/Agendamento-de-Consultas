@@ -12,7 +12,6 @@ public class RemoverPaciente(IRemoverRepository<PacienteModel> repository)
         {
             Id= id
             
-            
         };
         return await repository.RemoverAsync(model);
     }

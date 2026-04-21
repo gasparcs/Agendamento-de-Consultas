@@ -14,6 +14,8 @@ using Kigramed.K03.Application.EspecialidadeUseCase.Comand;
 using Kigramed.K03.Application.EspecialidadeUseCase.Queries;
 using Kigramed.K03.Application.FuncionarioUseCase.Comand;
 using Kigramed.K03.Application.FuncionarioUseCase.Queries;
+using Kigramed.K03.Application.PacienteUseCase.Comand;
+using Kigramed.K03.Application.PacienteUseCase.Queries;
 using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
@@ -125,6 +127,12 @@ builder.Services.AddTransient<RemoverServico>();
 builder.Services.AddTransient<ListarServicos>();
 builder.Services.AddTransient<PegarServicoPeloId>();
 builder.Services.AddTransient<PegarServicoPeloTexto>();
+
+//casos de uso pacientemodel
+builder.Services.AddTransient<AdicionarPaciente>();
+builder.Services.AddTransient<AtualizarPaciente>();
+builder.Services.AddTransient<RemoverPaciente>();
+builder.Services.AddTransient<ListarPacientes>();
 
 var app = builder.Build();
 

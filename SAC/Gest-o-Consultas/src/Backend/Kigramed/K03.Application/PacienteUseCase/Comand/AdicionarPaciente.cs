@@ -13,10 +13,14 @@ public class AdicionarPaciente(IAdicionarRepository<PacienteModel> repository)
       var model= new PacienteModel
       {
          Nome = dto.PacienteNome,
+
          Data_nascimento= dto.PacienteData_nascimento,
-         Id_genero= dto.Genero.Id_genero,
-         Id_cliente= dto.Cliente.Id_cliente,
-         Id_cliente_paciente= dto.Cliente_Paciente.Id_cliente_paciente
+
+         Id_genero = dto.IdGenero,
+
+         Id_cliente = dto.IdCliente,
+
+         Id_cliente_paciente = dto.IdCliente_Paciente
       
       };
       return await repository.AddAsync(model);
