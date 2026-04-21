@@ -32,6 +32,8 @@
     <Folder Include="K03.Application\FuncionarioUseCase\Comand\" />
     <Folder Include="K03.Application\FuncionarioUseCase\DTO\" />
     <Folder Include="K03.Application\FuncionarioUseCase\Queries\" />
+    <Folder Include="K03.Application\PacienteUseCase\Comand\" />
+    <Folder Include="K03.Application\PacienteUseCase\Queries\" />
     <Folder Include="K03.Application\PerfilUseCase\" />
     <Folder Include="K03.Application\PerfilUseCase\DTO\" />
     <Folder Include="K03.Application\PerfilUseCase\Queries\" />
@@ -56,6 +58,10 @@
     <Folder Include="K04.Domain\D17.PerfilPermissao\" />
     <Folder Include="K04.Domain\D18.PagamentoConsulta\" />
     <Folder Include="K04.Domain\D19.MedicoConsulta\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="K03.Application\PacienteUseCase\DTO\AtualizarPacienteDTO.cs" />
   </ItemGroup>
 
 </Project>

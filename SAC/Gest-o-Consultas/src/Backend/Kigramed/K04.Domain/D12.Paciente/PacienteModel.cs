@@ -16,7 +16,7 @@ public class PacienteModel
     public int Id{get;set;}
 
     [Column("id_cliente")]
-    public string Id_cliente {get;set;} = string.Empty;
+    public int Id_cliente {get;set;} 
 
     [Column("nome")]
     public String Nome {get;set;}=string.Empty;
