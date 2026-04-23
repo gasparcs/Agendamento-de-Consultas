@@ -30,7 +30,10 @@ public class PegarPacientePeloID(IPegarpeloId<PacienteModel> repository)
              Consultas = paciente.Consultas.Select( c =>  new ConsultaDTO
              {
                 IdConsuta = c.Id,
-                Data_Consulta= c.Data_consulta      
+
+                Data_Consulta= c.Data_consulta,
+
+                Estado = c.EstadoConsulta.Descricao 
              }),
 
          };

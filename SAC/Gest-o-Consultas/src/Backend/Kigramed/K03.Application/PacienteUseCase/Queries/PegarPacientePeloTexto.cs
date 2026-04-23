@@ -32,7 +32,9 @@ public class PegarPacientePeloTexto(IPegarpeloTextoRepository<PacienteModel> rep
             {
                 IdConsuta = c.Id,
 
-                Data_Consulta = c.Data_consulta
+                Data_Consulta = c.Data_consulta,
+
+                Estado = c.EstadoConsulta.Descricao
             })
     
         });

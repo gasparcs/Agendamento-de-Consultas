@@ -135,6 +135,8 @@ builder.Services.AddTransient<AdicionarPaciente>();
 builder.Services.AddTransient<AtualizarPaciente>();
 builder.Services.AddTransient<RemoverPaciente>();
 builder.Services.AddTransient<ListarPacientes>();
+builder.Services.AddTransient<PegarPacientePeloID>();
+builder.Services.AddTransient<PegarPacientePeloTexto>();
 
 //casos de uso consultamodel
 builder.Services.AddTransient<AdicionarConsulta>();

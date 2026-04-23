@@ -30,7 +30,9 @@ public class ListarPacientes(IListagemRepository<PacienteModel> repository)
             {
                 IdConsuta = c.Id,
 
-                Data_Consulta = c.Data_consulta
+                Data_Consulta = c.Data_consulta,
+
+                Estado = c.EstadoConsulta.Descricao
             })
     
         });

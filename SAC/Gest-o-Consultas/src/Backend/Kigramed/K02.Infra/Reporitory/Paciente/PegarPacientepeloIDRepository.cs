@@ -10,7 +10,8 @@ public class PegarPacientepeloIDRepository(KigramedDbContext context) : IPegarpe
 {
     public async Task<PacienteModel?> PegarAsync(int id)
     {
-        return await context.Tabelatb12_paciente.Include(p =>p.Cliente).Include(c =>c.ClientePaciente).Include(a => a.Consultas).Include(g => g.Genero).FirstOrDefaultAsync(i =>i.Id ==id);
+        return await context.Tabelatb12_paciente.Include(p =>p.Cliente).Include(c =>c.ClientePaciente).Include(a => a.Consultas).ThenInclude(c => c.EstadoConsulta) 
+        .Include(g => g.Genero).FirstOrDefaultAsync(i =>i.Id ==id);
     }
     
 }

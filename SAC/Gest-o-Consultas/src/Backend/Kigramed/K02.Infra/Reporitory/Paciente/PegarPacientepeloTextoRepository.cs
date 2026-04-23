@@ -10,6 +10,7 @@ public class PegarPacientepeloTextoRepository(KigramedDbContext context) : IPega
 {
     public async Task<IEnumerable<PacienteModel>> PegarAsync(string texto)
     {
-        return await context.Tabelatb12_paciente.Where(t => t.Nome.Contains(texto)).Include(p=> p.Cliente).Include(c => c.ClientePaciente).Include(a => a.Consultas).Include(g => g.Genero).ToListAsync();
+        return await context.Tabelatb12_paciente.Where(t => t.Nome.Contains(texto)).Include(p=> p.Cliente).Include(c => c.ClientePaciente).Include(a => a.Consultas).ThenInclude(c => c.EstadoConsulta) 
+        .Include(g => g.Genero).ToListAsync();
     }
 }

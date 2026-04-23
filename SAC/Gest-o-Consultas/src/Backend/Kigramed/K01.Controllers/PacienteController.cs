@@ -11,7 +11,9 @@ namespace Kigramed.K01.Controllers
     public class PacienteController(AdicionarPaciente adicionarServices,
     AtualizarPaciente atualizarServices,
     RemoverPaciente removerServices,
-    ListarPacientes listarServices)
+    ListarPacientes listarServices,
+    PegarPacientePeloID pegaridServices,
+    PegarPacientePeloTexto pegartextoServices)
     : ControllerBase
     {
          [HttpPost]
@@ -52,6 +54,22 @@ namespace Kigramed.K01.Controllers
         {
              var resposta = await listarServices.ExecuteAsync();
              return Ok(resposta);
+        }
+        
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> PegarPacientePeloId(int id)
+        {
+            var resposta = await pegaridServices.ExecuteAsync(id);
+            return resposta is null ? StatusCode(404, "Paciente não encontrado"):
+            Ok(resposta);
+        }
+
+         [HttpGet("texto/{texto}")]
+        public async Task<IActionResult> PegarPacientePeloTexto(string texto)
+        {
+            var resposta = await pegartextoServices.ExecuteAsync(texto);
+            return resposta is null ? StatusCode(404, "Nenhum paciente encontrado com o texto fornecido"):
+            Ok(resposta);
         }
     }
 }

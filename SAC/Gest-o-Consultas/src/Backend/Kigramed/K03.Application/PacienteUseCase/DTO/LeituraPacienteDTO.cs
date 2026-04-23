@@ -24,4 +24,6 @@ public class ConsultaDTO
     public int IdConsuta {get;set;}
 
     public DateTime Data_Consulta {get;set;}
+
+    public string Estado {get;set;} = null!;
 }
