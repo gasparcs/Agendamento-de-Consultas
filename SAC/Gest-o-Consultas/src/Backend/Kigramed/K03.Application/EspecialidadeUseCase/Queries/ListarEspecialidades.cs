@@ -23,7 +23,9 @@ public class ListarEspecialidades(IListagemRepository<EspecialidadeModel> reposi
 
            MedicoEspecialidade = e.MedicoEspecialidades.Select(me => new MedicoEspecialidadeDTO
            {
-               FuncionarioNif = me.Nif_funcionario
+               FuncionarioNif = me.Nif_funcionario,
+
+               FuncionarioNome = me.Funcionario.Nome
            }),
 
            Servicos = e.Servicos.Select( s => new ServicoDTO

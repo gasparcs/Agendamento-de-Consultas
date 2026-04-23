@@ -30,7 +30,9 @@ public class PegarEspecialidadePeloId(IPegarpeloId<EspecialidadeModel> repositor
 
              MedicoEspecialidade = especialidade.MedicoEspecialidades.Select( me =>  new MedicoEspecialidadeDTO
              {
-                 FuncionarioNif = me.Nif_funcionario
+                 FuncionarioNif = me.Nif_funcionario,
+
+                  FuncionarioNome = me.Funcionario.Nome
              })
          };
     }

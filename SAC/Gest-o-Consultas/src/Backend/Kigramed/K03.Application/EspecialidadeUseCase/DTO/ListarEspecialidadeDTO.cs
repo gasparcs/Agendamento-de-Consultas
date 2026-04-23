@@ -19,7 +19,9 @@ public class ListarEspecialidadeDTO
 
 public class MedicoEspecialidadeDTO
 {
-    public string FuncionarioNif {get;set;} = string.Empty;
+    public string FuncionarioNif {get;set;} = null!;
+
+    public string FuncionarioNome {get;set;} = null!;
 }
 
 public class ServicoDTO

@@ -30,7 +30,9 @@ public class PegarEspecialidadePeloTexto(IPegarpeloTextoRepository<Especialidade
 
             MedicoEspecialidade = e.MedicoEspecialidades.Select( me =>  new MedicoEspecialidadeDTO
             {
-                FuncionarioNif = me.Nif_funcionario
+                FuncionarioNif = me.Nif_funcionario,
+
+                 FuncionarioNome = me.Funcionario.Nome
             })
         });
     }
