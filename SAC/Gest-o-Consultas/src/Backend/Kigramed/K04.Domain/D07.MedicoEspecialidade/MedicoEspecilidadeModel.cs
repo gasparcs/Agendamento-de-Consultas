@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D06.Especialidade;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.D19.MedicoConsulta;
 
 namespace Kigramed.K04.Domain.D07.MedicoEspecialidade;

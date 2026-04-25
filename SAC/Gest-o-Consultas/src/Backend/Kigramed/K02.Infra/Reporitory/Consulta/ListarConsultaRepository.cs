@@ -1,6 +1,6 @@
 using System;
 using Kigramed.K02.Infra.Data;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
