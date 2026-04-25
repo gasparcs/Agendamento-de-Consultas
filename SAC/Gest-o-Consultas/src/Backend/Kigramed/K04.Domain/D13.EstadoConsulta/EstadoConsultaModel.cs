@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 
 namespace Kigramed.K04.Domain.D13.EstadoConsulta;
 [Table("tb13_estado_consulta")]

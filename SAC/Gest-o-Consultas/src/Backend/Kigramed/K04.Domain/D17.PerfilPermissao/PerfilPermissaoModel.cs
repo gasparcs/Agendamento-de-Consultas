@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D01.Perfil;
-using Kigramed.K04.Domain.D15.Permissao;
+using Kigramed.K04.Domain.D16.Permissao;
 
 namespace Kigramed.K04.Domain.D16.PerfilPermissao;
 [Table("tb17_perfil_permissoes")]

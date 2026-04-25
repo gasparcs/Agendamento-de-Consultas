@@ -22,7 +22,6 @@
     <Folder Include="K02.Infra\Reporitory\Paciente\" />
     <Folder Include="K02.Infra\Reporitory\Pagamento\" />
     <Folder Include="K02.Infra\Reporitory\Servico\" />
-    <Folder Include="K02.Infra\Reporitory\Sms\" />
     <Folder Include="K02.Infra\Servicos\AuthServico\" />
     <Folder Include="K02.Infra\Servicos\PasswordService\" />
     <Folder Include="K02.Infra\Servicos\SmsService\" />
@@ -68,6 +67,7 @@
     <Folder Include="K04.Domain\D17.PerfilPermissao\" />
     <Folder Include="K04.Domain\D18.PagamentoConsulta\" />
     <Folder Include="K04.Domain\D19.MedicoConsulta\" />
+    <Folder Include="K04.Domain\D20.SMS\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 using System;
 using Kigramed.K03.Application.PacienteUseCase.DTO;
 using Kigramed.K04.Domain.D12.Paciente;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
 
 namespace Kigramed.K03.Application.PacienteUseCase.Comand;

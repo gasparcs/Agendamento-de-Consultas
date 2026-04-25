@@ -7,6 +7,7 @@ using Kigramed.K04.Domain.D04.Contacto;
 using Kigramed.K04.Domain.D05.Auth;
 using Kigramed.K04.Domain.D07.MedicoEspecialidade;
 using Kigramed.K04.Domain.D14.Pagamento;
+using Kigramed.K04.Domain.D20.SMS;
 
 namespace Kigramed.K04.Domain.D02.Funcionario;
 [Table("tb02_funcionario")]
@@ -36,5 +37,6 @@ public class FuncionarioModel
 
     public ICollection<PagamentoModel> Pagamentos { get; set; } = [];
 
+    public ICollection<SMSModel> Mensagens { get; set; } = [];
 
 }

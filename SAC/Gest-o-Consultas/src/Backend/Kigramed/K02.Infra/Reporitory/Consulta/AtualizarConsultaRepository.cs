@@ -1,6 +1,6 @@
 using System;
 using Kigramed.K02.Infra.Data;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +19,6 @@ public class AtualizarConsultaRepository(KigramedDbContext context) : IActualiza
         consulta.EstadoConsulta=model.EstadoConsulta;
         return await context.SaveChangesAsync() >0?
         "Consulta atualizada com sucesso" :
-        "Não foi possível realizar a atualizaçõ";
+        "Não foi possível realizar a atualização";
     }
 }

@@ -8,7 +8,7 @@ using Kigramed.K04.Domain.D13.EstadoConsulta;
 using Kigramed.K04.Domain.D18.PagamentoConsulta;
 using Kigramed.K04.Domain.D19.MedicoConsulta;
 
-namespace Kigramed.K04.Domain.D14.Consulta;
+namespace Kigramed.K04.Domain.D15.Consulta;
 [Table("tb15_consulta")]
 public class ConsultaModel
 {
