@@ -70,6 +70,7 @@
     <Folder Include="K04.Domain\D17.PerfilPermissao\" />
     <Folder Include="K04.Domain\D18.PagamentoConsulta\" />
     <Folder Include="K04.Domain\D19.MedicoConsulta\" />
+    <Folder Include="K04.Domain\D20.SMS\" />
   </ItemGroup>
 
   <ItemGroup>

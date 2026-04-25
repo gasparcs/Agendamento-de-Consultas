@@ -18,6 +18,7 @@ using Kigramed.K04.Domain.D16.PerfilPermissao;
 using Kigramed.K04.Domain.D16.Permissao;
 using Kigramed.K04.Domain.D18.PagamentoConsulta;
 using Kigramed.K04.Domain.D19.MedicoConsulta;
+using Kigramed.K04.Domain.D20.SMS;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kigramed.K02.Infra.Data;
@@ -43,6 +44,7 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
     public DbSet<PerfilPermissaoModel> Tabelatb17_peril_permissoes{get;set;}
     public DbSet<PagamentoConsultaModel> Tabelatb18_pagamento_consulta{get;set;}
     public DbSet<MedicoConsultaModel> Tabelatb19_medico_consulta{get;set;}
+    public DbSet<SMSModel> Tabelatb20_sms{get;set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -64,6 +66,8 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
             entity.HasMany(f => f.MedicoEspecialidades).WithOne(me => me.Funcionario).HasForeignKey(fk => fk.Nif_funcionario);
 
             entity.HasMany(f => f.Pagamentos).WithOne(p => p.Funcionario).HasForeignKey(fk => fk.Nif_funcionario); 
+
+            entity.HasMany(f => f.Mensagens).WithOne(m => m.Funcionario).HasForeignKey(fk => fk.Nif_funcionario);
         });
 
 
@@ -101,6 +105,8 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
            entity.HasMany(c => c.Pacientes).WithOne(p => p.Cliente).HasForeignKey(fk => fk.Id_cliente);
 
            entity.HasMany(c => c.Pagamentos).WithOne(p => p.Cliente).HasForeignKey( fk => fk.Id_cliente);
+           
+           entity.HasMany(c => c.Mensagens).WithOne(m => m.Cliente).HasForeignKey(fk => fk.Id_cliente);
         });
 
         modelBuilder.Entity<GeneroModel>( entity =>
