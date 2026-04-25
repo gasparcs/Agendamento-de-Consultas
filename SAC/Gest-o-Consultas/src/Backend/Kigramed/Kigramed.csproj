@@ -22,6 +22,11 @@
     <Folder Include="K02.Infra\Reporitory\Paciente\" />
     <Folder Include="K02.Infra\Reporitory\Pagamento\" />
     <Folder Include="K02.Infra\Reporitory\Servico\" />
+    <Folder Include="K02.Infra\Reporitory\Sms\" />
+    <Folder Include="K02.Infra\Servicos\AuthServico\" />
+    <Folder Include="K02.Infra\Servicos\PasswordService\" />
+    <Folder Include="K02.Infra\Servicos\SmsService\" />
+    <Folder Include="K03.Application\AuthUseCase\" />
     <Folder Include="K03.Application\ClienteUseCase\Comand\" />
     <Folder Include="K03.Application\ClienteUseCase\DTO\" />
     <Folder Include="K03.Application\ConsultaUseCase\" />
@@ -41,8 +46,11 @@
     <Folder Include="K03.Application\PerfilUseCase\" />
     <Folder Include="K03.Application\PerfilUseCase\DTO\" />
     <Folder Include="K03.Application\PerfilUseCase\Queries\" />
-    <Folder Include="K03.Application\ServicoUseCase\Comand\" />
-    <Folder Include="K03.Application\ServicoUseCase\Queries\" />
+    <Folder Include="K03.Application\Servico\" />
+    <Folder Include="K03.Application\Servico\IPasswordService\" />
+    <Folder Include="K03.Application\Servico\ISmsService\" />
+    <Folder Include="K03.Application\Servico\ITokenService\" />
+    <Folder Include="K03.Application\SmsUseCase\" />
     <Folder Include="K04.Domain\D01.Perfil\" />
     <Folder Include="K04.Domain\D02.Funcionario\" />
     <Folder Include="K04.Domain\D03.TipoContacto\" />
