@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kigramed.K03.Application.ConsultaUseCase.DTO;
 
