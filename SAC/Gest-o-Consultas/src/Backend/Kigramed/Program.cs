@@ -28,8 +28,8 @@ using Kigramed.K04.Domain.D06.Especialidade;
 using Kigramed.K04.Domain.D08.Servico;
 using Kigramed.K04.Domain.D09.Cliente;
 using Kigramed.K04.Domain.D12.Paciente;
-using Kigramed.K04.Domain.D14.Consulta;
 using Kigramed.K04.Domain.D14.Pagamento;
+using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -150,7 +150,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

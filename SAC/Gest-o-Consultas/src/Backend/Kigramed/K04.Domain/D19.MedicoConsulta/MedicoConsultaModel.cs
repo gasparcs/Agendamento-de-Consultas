@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kigramed.K04.Domain.D07.MedicoEspecialidade;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 
 namespace Kigramed.K04.Domain.D19.MedicoConsulta;
 [Table("tb19_medico_consulta")]

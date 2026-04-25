@@ -5,7 +5,7 @@ using System.Reflection.Metadata;
 using Kigramed.K04.Domain.D09.Cliente;
 using Kigramed.K04.Domain.D10.Genero;
 using Kigramed.K04.Domain.D11.ClientePaciente;
-using Kigramed.K04.Domain.D14.Consulta;
+using Kigramed.K04.Domain.D15.Consulta;
 
 namespace Kigramed.K04.Domain.D12.Paciente;
 [Table("tb12_paciente")]
