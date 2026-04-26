@@ -1,180 +1,126 @@
 /**
  * Kigramed Frontend - API Client
- * Wrapper sobre fetch() com headers JWT (como Axios)
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5284/api';
 
-// Obter token dos cookies
 function getToken() {
     const creds = authManager.getCredentials();
     return creds?.token || getCookie('token');
 }
 
-// Configuração padrão
 const api = {
     baseURL: API_BASE_URL,
     
-    // Headers padrão
     getHeaders() {
-        const headers = {
-            'Content-Type': 'application/json'
-        };
+        const headers = { 'Content-Type': 'application/json' };
         const token = getToken();
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         return headers;
     },
     
-    // Request genérico
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
-        const config = {
-            ...options,
-            headers: {
-                ...this.getHeaders(),
-                ...options.headers
-            }
-        };
+        const config = { ...options, headers: { ...this.getHeaders(), ...options.headers } };
         
         try {
             const response = await fetch(url, config);
             const contentType = response.headers.get('content-type');
             const isJson = contentType?.includes('application/json');
-            
             let data;
-            try {
-                data = isJson ? await response.json() : await response.text();
-            } catch (e) {
-                data = null;
-            }
+            try { data = isJson ? await response.json() : await response.text(); } catch (e) { data = null; }
             
-            // Tratar erro 401 (Unauthorized)
             if (response.status === 401) {
                 authManager.clearCredentials();
-                appStore.set({
-                    token: null,
-                    user: null,
-                    isAuthenticated: false
-                });
+                appStore.set({ token: null, user: null, isAuthenticated: false });
                 router.navigate('login');
-                throw {
-                    status: 401,
-                    message: 'Sessão expirada. Faça login novamente.'
-                };
+                throw { status: 401, message: 'Sessão expirada. Faça login novamente.' };
             }
             
-            if (!response.ok) {
-                throw {
-                    status: response.status,
-                    message: data?.message || data || `Erro ${response.status}`
-                };
-            }
+            if (!response.ok) throw { status: response.status, message: data?.message || data || `Erro ${response.status}` };
             
             return data;
         } catch (error) {
-            // Diferenciar entre erro de rede e erro da API
             if (error instanceof TypeError && error.message.includes('fetch')) {
-                console.warn('⚠ API indisponível (erro de rede)');
-                throw {
-                    status: 0,
-                    message: 'API indisponível. Verifique se o servidor está rodando em http://localhost:5000'
-                };
+                throw { status: 0, message: 'API indisponível. Verifique se o servidor está rodando.' };
             }
-            
-            console.error('API Error:', error);
             throw error;
         }
     },
     
-    // GET
-    get(endpoint) {
-        return this.request(endpoint, { method: 'GET' });
-    },
-    
-    // POST
-    post(endpoint, data) {
-        return this.request(endpoint, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-    },
-    
-    // PUT
-    put(endpoint, data) {
-        return this.request(endpoint, {
-            method: 'PUT',
-            body: JSON.stringify(data)
-        });
-    },
-    
-    // DELETE
-    delete(endpoint) {
-        return this.request(endpoint, { method: 'DELETE' });
-    }
+    get(endpoint) { return this.request(endpoint, { method: 'GET' }); },
+    post(endpoint, data) { return this.request(endpoint, { method: 'POST', body: JSON.stringify(data) }); },
+    put(endpoint, data) { return this.request(endpoint, { method: 'PUT', body: JSON.stringify(data) }); },
+    delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); }
 };
 
-// Endpoints da API (use role-based paths)
 const endpoints = {
     // Auth
     login: (data) => api.post('/auth/login', data),
-    status: () => api.get('/auth/status'),
-    
-    // Secretaria endpoints (CRUD)
-    // Clientes
-    getClientes: () => api.get('/secretaria/clientes'),
-    getClienteById: (id) => api.get(`/secretaria/clientes/${id}`),
-    createCliente: (data) => api.post('/secretaria/clientes', data),
-    updateCliente: (id, data) => api.put(`/secretaria/clientes/${id}`, data),
-    deleteCliente: (id) => api.delete(`/secretaria/clientes/${id}`),
-    
-    // Consultas
-    getConsultas: () => api.get('/secretaria/consultas'),
-    getConsultaById: (id) => api.get(`/secretaria/consultas/${id}`),
-    createConsulta: (data) => api.post('/secretaria/consultas', data),
-    updateConsulta: (id, data) => api.put(`/secretaria/consultas/${id}`, data),
-    deleteConsulta: (id) => api.delete(`/secretaria/consultas/${id}`),
-    
-    // Pacientes
-    getPacientes: () => api.get('/secretaria/pacientes'),
-    getPacienteById: (id) => api.get(`/secretaria/pacientes/${id}`),
-    createPaciente: (data) => api.post('/secretaria/pacientes', data),
-    updatePaciente: (id, data) => api.put(`/secretaria/pacientes/${id}`, data),
-    deletePaciente: (id) => api.delete(`/secretaria/pacientes/${id}`),
-    
-    // Admin endpoints (full access)
-    // Especialidades
-    getEspecialidades: () => api.get('/admin/especialidades'),
-    getEspecialidadeById: (id) => api.get(`/admin/especialidades/${id}`),
-    createEspecialidade: (data) => api.post('/admin/especialidades', data),
-    updateEspecialidade: (id, data) => api.put(`/admin/especialidades/${id}`, data),
-    deleteEspecialidade: (id) => api.delete(`/admin/especialidades/${id}`),
-    
-    // Serviços
-    getServicos: () => api.get('/admin/servicos'),
-    getServicoById: (id) => api.get(`/admin/servicos/${id}`),
-    createServico: (data) => api.post('/admin/servicos', data),
-    updateServico: (id, data) => api.put(`/admin/servicos/${id}`, data),
-    deleteServico: (id) => api.delete(`/admin/servicos/${id}`),
-    
-    // Funcionários
-    getFuncionarios: () => api.get('/admin/funcionarios'),
-    getFuncionarioById: (id) => api.get(`/admin/funcionarios/${id}`),
-    createFuncionario: (data) => api.post('/admin/funcionarios', data),
-    updateFuncionario: (id, data) => api.put(`/admin/funcionarios/${id}`, data),
-    deleteFuncionario: (id) => api.delete(`/admin/funcionarios/${id}`),
-    
-    // Pagamentos
-    getPagamentos: () => api.get('/secretaria/pagamentos'),
-    getPagamentoById: (id) => api.get(`/secretaria/pagamentos/${id}`),
-    createPagamento: (data) => api.post('/secretaria/pagamentos', data),
-    deletePagamento: (id) => api.delete(`/secretaria/pagamentos/${id}`),
-    
-    // Perfis
-    getPerfis: () => api.get('/admin/perfis')
+
+    // ===== ADMIN =====
+    getClientes: () => api.get('/admin/cliente'),
+    createCliente: (data) => api.post('/admin/cliente', data),
+    updateCliente: (nif, data) => api.put(`/admin/cliente/${nif}`, data),
+    deleteCliente: (nif) => api.delete(`/admin/cliente/${nif}`),
+    getClienteByNif: (nif) => api.get(`/admin/cliente/nif/${nif}`),
+    getClienteByTexto: (texto) => api.get(`/admin/cliente/texto/${texto}`),
+
+    getConsultas: () => api.get('/admin/consulta'),
+    createConsulta: (data) => api.post('/admin/consulta', data),
+    updateConsulta: (id, data) => api.put(`/admin/consulta/${id}`, data),
+
+    getEspecialidades: () => api.get('/admin/especialidade'),
+    createEspecialidade: (data) => api.post('/admin/especialidade', data),
+    updateEspecialidade: (id, data) => api.put(`/admin/especialidade/${id}`, data),
+    deleteEspecialidade: (id) => api.delete(`/admin/especialidade/${id}`),
+    getEspecialidadeById: (id) => api.get(`/admin/especialidade/id/${id}`),
+    getEspecialidadeByTexto: (texto) => api.get(`/admin/especialidade/texto/${texto}`),
+
+    getFuncionarios: () => api.get('/admin/funcionario'),
+    createFuncionario: (data) => api.post('/admin/funcionario', data),
+    updateFuncionario: (nif, data) => api.put(`/admin/funcionario/${nif}`, data),
+    deleteFuncionario: (nif) => api.delete(`/admin/funcionario/${nif}`),
+    getFuncionarioByNif: (nif) => api.get(`/admin/funcionario/nif/${nif}`),
+    getFuncionarioByTexto: (texto) => api.get(`/admin/funcionario/texto/${texto}`),
+
+    getPacientes: () => api.get('/admin/paciente'),
+    createPaciente: (data) => api.post('/admin/paciente', data),
+    updatePaciente: (id, data) => api.put(`/admin/paciente/${id}`, data),
+    deletePaciente: (id) => api.delete(`/admin/paciente/${id}`),
+    getPacienteById: (id) => api.get(`/admin/paciente/id/${id}`),
+    getPacienteByTexto: (texto) => api.get(`/admin/paciente/texto/${texto}`),
+
+    getPerfis: () => api.get('/admin/perfil'),
+
+    getServicos: () => api.get('/admin/servico'),
+    createServico: (data) => api.post('/admin/servico', data),
+    updateServico: (id, data) => api.put(`/admin/servico/${id}`, data),
+    deleteServico: (id) => api.delete(`/admin/servico/${id}`),
+    getServicoById: (id) => api.get(`/admin/servico/id/${id}`),
+    getServicoByTexto: (texto) => api.get(`/admin/servico/texto/${texto}`),
+
+    // ===== SECRETARIA =====
+    getClientesSecretaria: () => api.get('/secretaria/cliente'),
+    createClienteSecretaria: (data) => api.post('/secretaria/cliente', data),
+    updateClienteSecretaria: (nif, data) => api.put(`/secretaria/cliente/${nif}`, data),
+    deleteClienteSecretaria: (nif) => api.delete(`/secretaria/cliente/${nif}`),
+
+    getConsultasSecretaria: () => api.get('/secretaria/consulta'),
+    createConsultaSecretaria: (data) => api.post('/secretaria/consulta', data),
+
+    getPacientesSecretaria: () => api.get('/secretaria/paciente'),
+    createPacienteSecretaria: (data) => api.post('/secretaria/paciente', data),
+    updatePacienteSecretaria: (id, data) => api.put(`/secretaria/paciente/${id}`, data),
+    deletePacienteSecretaria: (id) => api.delete(`/secretaria/paciente/${id}`),
+
+    getServicosSecretaria: () => api.get('/secretaria/servico'),
+    getEspecialidadesSecretaria: () => api.get('/secretaria/especialidade'),
+
+    // ===== MEDICO =====
+    getConsultasMedico: () => api.get('/medico/consultas'),
+    updateConsultaMedico: (id, data) => api.put(`/medico/consulta/${id}`, data),
 };
 
-// Exportar
 window.api = api;
 window.endpoints = endpoints;

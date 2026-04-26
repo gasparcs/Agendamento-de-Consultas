@@ -1,6 +1,8 @@
 /**
  * Kigramed Frontend - Main Application Entry Point
  */
+// Imports
+// Imports
 
 // Inicializar ícones Lucide
 document.addEventListener('DOMContentLoaded', () => {

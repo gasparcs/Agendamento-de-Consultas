@@ -68,17 +68,29 @@ async function handleLogin(e) {
     try {
         appStore.set({ loading: true });
         
-        // Fazer chamada real à API
-        const response = await endpoints.login({ nif, password });
+        // ✅ Campo correto: "senha" em vez de "password"
+        const response = await endpoints.login({ nif, senha: password });
         
-        // Salvar credenciais com authManager
-        authManager.saveCredentials(response.token, response.user || { nif, nome: response.nome || 'Usuário' }, 120 * 60);
+        // ✅ Dados vêm dentro de response.dados
+        const dados = response.dados;
         
-        // Atualizar store
+        authManager.saveCredentials(dados.token, {
+            nif: dados.nif,
+            nome: dados.nome,
+            perfil: dados.perfil,
+            role: dados.role,
+            telefone: dados.telefone
+        }, 120 * 60);
+        
         appStore.set({
             isAuthenticated: true,
-            token: response.token,
-            user: response.user || { nif, nome: response.nome || 'Usuário' },
+            token: dados.token,
+            user: {
+                nif: dados.nif,
+                nome: dados.nome,
+                perfil: dados.perfil,
+                role: dados.role
+            },
             loading: false
         });
         
@@ -87,36 +99,16 @@ async function handleLogin(e) {
         
     } catch (error) {
         appStore.set({ loading: false });
-        
         console.error('Erro ao fazer login:', error);
         
-        const message = error?.message || 'Erro ao conectar com o servidor';
-        
-        // Para desenvolvimento, permitir demo
         if (error?.status === 0 || error?.message?.includes('Failed to fetch')) {
             toast.warning('API indisponível. Usando modo demo.');
-            
-            const demoUser = { 
-                nif, 
-                nome: 'Administrador Demo', 
-                perfil: 'Admin',
-                email: `${nif}@kigramed.com`
-            };
-            
+            const demoUser = { nif, nome: 'Administrador Demo', perfil: 'Admin', role: 'admin' };
             authManager.saveCredentials('demo-token-' + Date.now(), demoUser);
-            
-            appStore.set({
-                isAuthenticated: true,
-                token: 'demo-token',
-                user: demoUser
-            });
-            
+            appStore.set({ isAuthenticated: true, token: 'demo-token', user: demoUser });
             router.navigate('dashboard');
         } else {
-            toast.error(message);
+            toast.error(error?.message || 'NIF ou senha inválidos');
         }
     }
 }
-
-// Exportar
-window.renderLoginPage = renderLoginPage;

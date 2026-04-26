@@ -25,7 +25,7 @@ namespace Kigramed.K01.Controllers
 {  
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController (AdicionarCliente adicionarServices,
      AtualizarCliente atualizarServices,
       ListarClientes listarServices, 
