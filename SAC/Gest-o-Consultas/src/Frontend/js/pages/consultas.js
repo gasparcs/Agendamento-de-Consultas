@@ -123,7 +123,7 @@ function renderConsultas() {
 
 async function loadConsultas() {
     try {
-        const consultas = await endpoints.getConsultas();
+        const consultas = await endpoints.getConsultasByRole();
         appStore.set({ consultas });
         renderConsultasTable(consultas);
     } catch (error) {
@@ -205,7 +205,7 @@ async function handleSaveConsulta(e) {
     };
     
     try {
-        await endpoints.createConsulta(data);
+        await endpoints.createConsultaByRole(data);
         toast.success('Consulta agendada com sucesso!');
         closeModal('consulta');
         loadConsultas();

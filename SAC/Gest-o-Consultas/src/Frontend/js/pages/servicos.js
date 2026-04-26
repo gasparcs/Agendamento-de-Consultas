@@ -93,7 +93,7 @@ function renderServicos() {
 
 async function loadServicos() {
     try {
-        const servicos = await endpoints.getServicos();
+        const servicos = await endpoints.getServicosByRole();
         appStore.set({ servicos });
         renderServicosTable(servicos);
     } catch (error) {

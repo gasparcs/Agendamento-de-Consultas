@@ -115,7 +115,7 @@ function renderClientes() {
 async function loadClientes() {
     try {
         appStore.set({ loading: true });
-        const clientes = await endpoints.getClientes();
+        const clientes = await endpoints.getClientesByRole();
         appStore.set({ clientes, loading: false });
         renderClientesTable(clientes);
     } catch (error) {
@@ -201,10 +201,10 @@ async function handleSaveCliente(e) {
         appStore.set({ loading: true });
         
         if (nif) {
-            await endpoints.updateCliente(nif, data);
+            await endpoints.updateClienteByRole(nif, data);
             toast.success('Cliente atualizado com sucesso!');
         } else {
-            await endpoints.createCliente(data);
+            await endpoints.createClienteByRole(data);
             toast.success('Cliente criado com sucesso!');
         }
         
@@ -237,7 +237,7 @@ function editCliente(nif) {
 async function deleteCliente(nif) {
     if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
     try {
-        await endpoints.deleteCliente(nif);
+        await endpoints.deleteClienteByRole(nif);
         toast.success('Cliente excluído com sucesso!');
         loadClientes();
     } catch (error) {

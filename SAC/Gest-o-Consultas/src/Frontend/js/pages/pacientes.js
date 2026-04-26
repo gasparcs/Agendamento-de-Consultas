@@ -90,7 +90,7 @@ function renderPacientes() {
 
 async function loadPacientes() {
     try {
-        const pacientes = await endpoints.getPacientes();
+        const pacientes = await endpoints.getPacientesByRole();
         appStore.set({ pacientes });
         renderPacientesTable(pacientes);
     } catch (error) {
@@ -151,10 +151,10 @@ async function handleSavePaciente(e) {
     
     try {
         if (id) {
-            await endpoints.updatePaciente(id, data);
+            await endpoints.updatePacienteByRole(id, data);
             toast.success('Paciente atualizado com sucesso!');
         } else {
-            await endpoints.createPaciente(data);
+            await endpoints.createPacienteByRole(data);
             toast.success('Paciente criado com sucesso!');
         }
         closeModal('paciente');
@@ -183,7 +183,7 @@ function editPaciente(id) {
 async function deletePaciente(id) {
     if (!confirm('Tem certeza que deseja excluir este paciente?')) return;
     try {
-        await endpoints.deletePaciente(id);
+        await endpoints.deletePacienteByRole(id);
         toast.success('Paciente excluído com sucesso!');
         loadPacientes();
     } catch (error) {

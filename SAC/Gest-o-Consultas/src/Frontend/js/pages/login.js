@@ -35,7 +35,7 @@ function renderLoginPage() {
                 
                 <div style="margin-top: 24px; text-align: center;">
                     <p style="font-size: 13px; color: var(--gray-500);">
-                        Demo: Use qualquer NIF e senha para testar
+                        Seja Bem-Vindo
                     </p>
                 </div>
             </div>

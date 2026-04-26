@@ -138,11 +138,11 @@ async function loadDashboardData() {
         appStore.set({ loading: true });
         
         // Carregar consultas
-        const consultas = await endpoints.getConsultas();
+        const consultas = await endpoints.getConsultasByRole();
         appStore.set({ consultas });
         
         // Carregar pacientes
-        const pacientes = await endpoints.getPacientes();
+        const pacientes = await endpoints.getPacientesByRole();
         appStore.set({ pacientes, loading: false });
         
         // Atualizar estatísticas

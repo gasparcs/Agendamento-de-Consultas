@@ -9,6 +9,16 @@ function getToken() {
     return creds?.token || getCookie('token');
 }
 
+function getCurrentUserRole() {
+    const roleFromStore = appStore.get('user')?.role;
+    const roleFromSession = authManager.getCredentials()?.user?.role;
+    return String(roleFromStore || roleFromSession || '').toLowerCase();
+}
+
+function isSecretariaUser() {
+    return getCurrentUserRole() === 'secretaria';
+}
+
 const api = {
     baseURL: API_BASE_URL,
     
@@ -116,6 +126,23 @@ const endpoints = {
 
     getServicosSecretaria: () => api.get('/secretaria/servico'),
     getEspecialidadesSecretaria: () => api.get('/secretaria/especialidade'),
+
+    // ===== ROLE-AWARE HELPERS =====
+    getClientesByRole: () => isSecretariaUser() ? endpoints.getClientesSecretaria() : endpoints.getClientes(),
+    createClienteByRole: (data) => isSecretariaUser() ? endpoints.createClienteSecretaria(data) : endpoints.createCliente(data),
+    updateClienteByRole: (nif, data) => isSecretariaUser() ? endpoints.updateClienteSecretaria(nif, data) : endpoints.updateCliente(nif, data),
+    deleteClienteByRole: (nif) => isSecretariaUser() ? endpoints.deleteClienteSecretaria(nif) : endpoints.deleteCliente(nif),
+
+    getConsultasByRole: () => isSecretariaUser() ? endpoints.getConsultasSecretaria() : endpoints.getConsultas(),
+    createConsultaByRole: (data) => isSecretariaUser() ? endpoints.createConsultaSecretaria(data) : endpoints.createConsulta(data),
+
+    getPacientesByRole: () => isSecretariaUser() ? endpoints.getPacientesSecretaria() : endpoints.getPacientes(),
+    createPacienteByRole: (data) => isSecretariaUser() ? endpoints.createPacienteSecretaria(data) : endpoints.createPaciente(data),
+    updatePacienteByRole: (id, data) => isSecretariaUser() ? endpoints.updatePacienteSecretaria(id, data) : endpoints.updatePaciente(id, data),
+    deletePacienteByRole: (id) => isSecretariaUser() ? endpoints.deletePacienteSecretaria(id) : endpoints.deletePaciente(id),
+
+    getServicosByRole: () => isSecretariaUser() ? endpoints.getServicosSecretaria() : endpoints.getServicos(),
+    getEspecialidadesByRole: () => isSecretariaUser() ? endpoints.getEspecialidadesSecretaria() : endpoints.getEspecialidades(),
 
     // ===== MEDICO =====
     getConsultasMedico: () => api.get('/medico/consultas'),

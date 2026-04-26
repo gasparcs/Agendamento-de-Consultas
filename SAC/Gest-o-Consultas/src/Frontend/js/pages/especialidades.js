@@ -67,7 +67,7 @@ function renderEspecialidades() {
 
 async function loadEspecialidades() {
     try {
-        const especialidades = await endpoints.getEspecialidades();
+        const especialidades = await endpoints.getEspecialidadesByRole();
         appStore.set({ especialidades });
         renderEspecialidadesGrid(especialidades);
     } catch (error) {
