@@ -18,29 +18,21 @@ public class LoginUsuario(
 {
     public async Task<LoginResponseDTO?> ExecuteAsync(LoginRequestDTO request)
     {
-        // Buscar dados de autenticação pelo NIF
         var auth = await authRepository.PegarPeloNifAsync(request.Nif);
         if (auth == null)
-        {
-            return null; // Usuário não encontrado
-        }
+            return null;
 
-        // Verificar senha
         bool senhaValida = await passwordVerify.VerifyAsync(request.Senha, auth.Senha_hash, auth.Senha_Salt);
         if (!senhaValida)
-        {
-            return null; // Senha inválida
-        }
+            return null;
 
-        // Normalizar o perfil para role
         string normalizedRole = NormalizarPerfil(auth.Funcionario.Perfil?.Descricao);
 
-        // Obter telefone
-        string telefone = auth.Funcionario.Contactos
-            .FirstOrDefault(c => c.TipoContacto.Descricao.ToLower() == "telefone")?
+        string telefone = auth.Funcionario.Contactos?
+            .FirstOrDefault(c => c.TipoContacto?.Descricao
+                .Equals("telefone", StringComparison.OrdinalIgnoreCase) == true)?
             .Contacto ?? string.Empty;
 
-        // Gerar token
         string token = tokenService.GerarToken(
             nif: auth.Nif_funcionario,
             nome: auth.Funcionario.Nome,
@@ -49,7 +41,6 @@ public class LoginUsuario(
             perfil: auth.Funcionario.Perfil?.Descricao ?? "Sem Perfil"
         );
 
-        // Retornar resposta
         return new LoginResponseDTO
         {
             Nif = auth.Nif_funcionario,
@@ -71,13 +62,13 @@ public class LoginUsuario(
         if (semAcentos.Contains("admin"))
             return "Admin";
 
-        if (semAcentos.Contains("medico") || semAcentos.Contains("médico"))
+        if (semAcentos.Contains("medico"))
             return "Medico";
 
-        if (semAcentos.Contains("secretaria") || semAcentos.Contains("secretário"))
+        if (semAcentos.Contains("secretaria") || semAcentos.Contains("secretario"))
             return "Secretaria";
 
-        return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(semAcentos);
+        return "Funcionario";
     }
 
     private static string RemoverAcentos(string texto)
@@ -87,12 +78,10 @@ public class LoginUsuario(
 
         foreach (char c in normalized)
         {
-            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                 builder.Append(c);
         }
 
         return builder.ToString().Normalize(NormalizationForm.FormC);
     }
 }
-
