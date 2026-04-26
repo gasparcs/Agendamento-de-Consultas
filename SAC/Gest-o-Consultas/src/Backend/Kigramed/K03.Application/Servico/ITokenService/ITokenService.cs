@@ -2,7 +2,8 @@ using System;
 
 namespace Kigramed.K03.Application.Servico.ITokenService;
 
-public class ITokenService
+public interface ITokenService
 {
-    string GerarToken(int usuarioId, string nome, string telefone, string role, string tipoUsuario);
+    string GerarToken(string nif, string nome, string telefone, string role, string perfil);
+
 }

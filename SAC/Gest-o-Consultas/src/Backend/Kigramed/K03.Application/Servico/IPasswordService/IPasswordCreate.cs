@@ -2,7 +2,7 @@ using System;
 
 namespace Kigramed.K03.Application.Servico.IPasswordService;
 
-public class IPasswordCreate
+public interface IPasswordCreate
 {
-   Task<string> GenerateAsync();
+       Task<string> GenerateAsync();
 }
