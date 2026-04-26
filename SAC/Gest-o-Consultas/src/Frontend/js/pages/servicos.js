@@ -24,14 +24,17 @@ function renderServicos() {
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Preço</th>
-                            <th>Duração</th>
+                            <th>Preço (AOA)</th>
+                            <th>Duração (min)</th>
+                            <th>Estado</th>
+                            <th>Especialidade</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="servicos-table">
-                        <tr><td colspan="5" style="text-align: center; padding: 40px;"><div class="loading"><div class="spinner"></div></div></td></tr>
+                        <tr><td colspan="6" style="text-align: center; padding: 40px;">
+                            <div class="loading"><div class="spinner"></div></div>
+                        </td></tr>
                     </tbody>
                 </table>
             </div>
@@ -39,29 +42,44 @@ function renderServicos() {
         
         <div class="modal-overlay" id="modal-servico">
             <div class="modal">
-                <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Novo Serviço</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 600;" id="modal-servico-title">Novo Serviço</h2>
+                    <button class="btn btn-secondary" style="padding: 8px;" onclick="closeModal('servico')">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
                 <form id="form-servico">
+                    <input type="hidden" id="servico-id">
                     <div class="form-group">
                         <label class="form-label">Nome *</label>
                         <input type="text" id="servico-nome" class="form-input" required>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Descrição</label>
-                        <textarea id="servico-descricao" class="form-input" rows="3"></textarea>
-                    </div>
                     <div class="grid grid-cols-2">
                         <div class="form-group">
                             <label class="form-label">Preço (AOA)</label>
-                            <input type="number" id="servico-preco" class="form-input" min="0">
+                            <input type="number" id="servico-preco" class="form-input" min="0" step="0.01">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Duração (min)</label>
                             <input type="number" id="servico-duracao" class="form-input" min="15" step="15">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">ID Especialidade *</label>
+                        <input type="number" id="servico-especialidade" class="form-input" placeholder="ID da especialidade" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select id="servico-estado" class="form-input">
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('servico')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Guardar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="save"></i>Guardar
+                        </button>
                     </div>
                 </form>
             </div>
@@ -79,14 +97,12 @@ async function loadServicos() {
         appStore.set({ servicos });
         renderServicosTable(servicos);
     } catch (error) {
-        const demo = [
-            { id: 1, nome: 'Consulta Geral', descricao: 'Consulta de medicina geral', preco: 2500, duracao: 30 },
-            { id: 2, nome: 'Consulta Especializada', descricao: 'Consulta com especialista', preco: 5000, duracao: 45 },
-            { id: 3, nome: 'Exame de Sangue', descricao: 'Análise clínica completa', preco: 3500, duracao: 15 },
-            { id: 4, nome: 'Ecografia', descricao: 'Exame de imagem', preco: 8000, duracao: 30 }
-        ];
-        appStore.set({ servicos: demo });
-        renderServicosTable(demo);
+        console.error('Erro ao carregar serviços:', error);
+        toast.error(error?.message || 'Erro ao carregar serviços');
+        document.getElementById('servicos-table').innerHTML = `
+            <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                Erro ao carregar serviços
+            </td></tr>`;
     }
 }
 
@@ -95,19 +111,33 @@ function renderServicosTable(servicos) {
     if (!tbody) return;
     
     if (servicos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--gray-500);">Nenhum serviço encontrado</td></tr>';
+        tbody.innerHTML = `
+            <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                Nenhum serviço encontrado
+            </td></tr>`;
         return;
     }
     
     tbody.innerHTML = servicos.map(s => `
         <tr>
-            <td><strong>${s.nome}</strong></td>
-            <td>${s.descricao || '-'}</td>
-            <td>${formatCurrency(s.preco)}</td>
-            <td>${s.duracao || '-'} min</td>
+            <td><strong>${s.servicoNome || '-'}</strong></td>
+            <td>${s.servicoPreco?.toLocaleString('pt-AO') || '0'} Kz</td>
+            <td>${s.servicoDuracaoMinuto || '-'} min</td>
             <td>
-                <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editServico(${s.id})"><i data-lucide="edit-2"></i></button>
-                <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteServico(${s.id})"><i data-lucide="trash-2"></i></button>
+                <span class="badge badge-${s.servicoEstado ? 'success' : 'danger'}">
+                    ${s.servicoEstado ? 'Ativo' : 'Inativo'}
+                </span>
+            </td>
+            <td>${s.idEspecialidade || '-'}</td>
+            <td>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editServico(${s.idEspecialidade}, '${s.servicoNome}')">
+                        <i data-lucide="edit-2"></i>
+                    </button>
+                    <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteServico(${s.idEspecialidade})">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     `).join('');
@@ -117,29 +147,56 @@ function renderServicosTable(servicos) {
 
 async function handleSaveServico(e) {
     e.preventDefault();
+    
+    const id = document.getElementById('servico-id').value;
     const data = {
-        nome: document.getElementById('servico-nome').value,
-        descricao: document.getElementById('servico-descricao').value,
-        preco: parseFloat(document.getElementById('servico-preco').value) || 0,
-        duracao: parseInt(document.getElementById('servico-duracao').value) || 30
+        servicoNome: document.getElementById('servico-nome').value,
+        servicoPreco: parseFloat(document.getElementById('servico-preco').value) || 0,
+        servicoDuracaoMinuto: parseInt(document.getElementById('servico-duracao').value) || 30,
+        idEspecialidade: parseInt(document.getElementById('servico-especialidade').value),
+        servicoEstado: document.getElementById('servico-estado').value === 'true'
     };
     
     try {
-        await endpoints.createServico(data);
-        toast.success('Serviço criado!');
+        if (id) {
+            await endpoints.updateServico(id, data);
+            toast.success('Serviço atualizado com sucesso!');
+        } else {
+            await endpoints.createServico(data);
+            toast.success('Serviço criado com sucesso!');
+        }
+        closeModal('servico');
+        loadServicos();
     } catch (error) {
-        toast.success('Serviço criado (demo)!');
+        toast.error(error?.message || 'Erro ao salvar serviço');
     }
-    closeModal('servico');
-    loadServicos();
 }
 
-function editServico(id) { toast.info('Em desenvolvimento'); }
+function editServico(id, nome) {
+    const servicos = appStore.get('servicos') || [];
+    const servico = servicos.find(s => s.idEspecialidade === id && s.servicoNome === nome);
+    if (!servico) return;
+
+    document.getElementById('servico-id').value = id;
+    document.getElementById('servico-nome').value = servico.servicoNome;
+    document.getElementById('servico-preco').value = servico.servicoPreco;
+    document.getElementById('servico-duracao').value = servico.servicoDuracaoMinuto;
+    document.getElementById('servico-especialidade').value = servico.idEspecialidade;
+    document.getElementById('servico-estado').value = servico.servicoEstado ? 'true' : 'false';
+
+    document.getElementById('modal-servico-title').textContent = 'Editar Serviço';
+    openModal('servico');
+}
+
 async function deleteServico(id) {
-    if (!confirm('Excluir serviço?')) return;
-    try { await endpoints.deleteServico(id); toast.success('Serviço excluído!'); } 
-    catch { toast.success('Serviço excluído (demo)!'); }
-    loadServicos();
+    if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+    try {
+        await endpoints.deleteServico(id);
+        toast.success('Serviço excluído com sucesso!');
+        loadServicos();
+    } catch (error) {
+        toast.error(error?.message || 'Erro ao excluir serviço');
+    }
 }
 
 window.renderServicos = renderServicos;

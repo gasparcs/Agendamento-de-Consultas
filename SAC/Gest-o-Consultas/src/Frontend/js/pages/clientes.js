@@ -107,21 +107,11 @@ function renderClientes() {
         </div>
     `;
     
-    // Inicializar ícones
-    if (window.lucide) {
-        lucide.createIcons();
-    }
-    
-    // Carregar clientes
+    if (window.lucide) lucide.createIcons();
     loadClientes();
-    
-    // Event listener do formulário
     document.getElementById('form-cliente').addEventListener('submit', handleSaveCliente);
 }
 
-/**
- * Carregar clientes
- */
 async function loadClientes() {
     try {
         appStore.set({ loading: true });
@@ -130,69 +120,49 @@ async function loadClientes() {
         renderClientesTable(clientes);
     } catch (error) {
         appStore.set({ loading: false });
-        
         console.error('Erro ao carregar clientes:', error);
         
         if (error?.status === 0) {
-            // API indisponível
-            toast.error('⚠ API indisponível. Alguns recursos podem estar limitados.');
+            toast.error('API indisponível.');
             document.getElementById('clientes-table').innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                        <div style="margin-bottom: 16px;">
-                            <i data-lucide="wifi-off" style="width: 48px; height: 48px; color: var(--warning);"></i>
-                        </div>
-                        <p>Servidor não está respondendo.</p>
-                        <p style="font-size: 12px; margin-top: 8px;">
-                            Certifique-se de que o servidor está rodando em http://localhost:5000
-                        </p>
-                    </td>
-                </tr>
-            `;
+                <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                    Servidor não está respondendo.
+                </td></tr>`;
         } else {
             toast.error(error?.message || 'Erro ao carregar clientes');
             document.getElementById('clientes-table').innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                        Erro ao carregar clientes
-                    </td>
-                </tr>
-            `;
+                <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                    Erro ao carregar clientes
+                </td></tr>`;
         }
     }
 }
 
-/**
- * Renderizar tabela de clientes
- */
 function renderClientesTable(clientes) {
     const tbody = document.getElementById('clientes-table');
     if (!tbody) return;
     
     if (clientes.length === 0) {
         tbody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                    Nenhum cliente encontrado
-                </td>
-            </tr>
-        `;
+            <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                Nenhum cliente encontrado
+            </td></tr>`;
         return;
     }
     
     tbody.innerHTML = clientes.map(c => `
         <tr>
-            <td><code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px;">${c.nif}</code></td>
-            <td><strong>${c.nome}</strong></td>
-            <td>${c.email || '-'}</td>
-            <td>${c.telefone || '-'}</td>
-            <td>${c.endereco || '-'}</td>
+            <td><code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px;">${c.clienteNif || '-'}</code></td>
+            <td><strong>${c.clienteNome || '-'}</strong></td>
+            <td>${c.contactos?.find(ct => ct.tipoContacto?.descricao?.toLowerCase() === 'email')?.contacto || '-'}</td>
+            <td>${c.contactos?.find(ct => ct.tipoContacto?.descricao?.toLowerCase() === 'telefone')?.contacto || '-'}</td>
+            <td>-</td>
             <td>
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editCliente(${c.id})">
+                    <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editCliente('${c.clienteNif}')">
                         <i data-lucide="edit-2"></i>
                     </button>
-                    <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteCliente(${c.id})">
+                    <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteCliente('${c.clienteNif}')">
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
@@ -200,56 +170,38 @@ function renderClientesTable(clientes) {
         </tr>
     `).join('');
     
-    if (window.lucide) {
-        lucide.createIcons({ node: tbody });
-    }
+    if (window.lucide) lucide.createIcons({ node: tbody });
 }
 
-/**
- * Filtrar clientes
- */
 function filterClientes(query) {
     const clientes = appStore.get('clientes') || [];
     const filtered = clientes.filter(c => 
-        c.nome?.toLowerCase().includes(query.toLowerCase()) ||
-        c.nif?.includes(query)
+        c.clienteNome?.toLowerCase().includes(query.toLowerCase()) ||
+        c.clienteNif?.includes(query)
     );
     renderClientesTable(filtered);
 }
 
-/**
- * Salvar cliente
- */
 async function handleSaveCliente(e) {
     e.preventDefault();
     
-    const id = document.getElementById('cliente-id').value;
+    const nif = document.getElementById('cliente-id').value;
     const data = {
-        nif: document.getElementById('cliente-nif').value,
-        nome: document.getElementById('cliente-nome').value,
-        email: document.getElementById('cliente-email').value,
-        telefone: document.getElementById('cliente-telefone').value,
-        endereco: document.getElementById('cliente-endereco').value
+        clienteNif: document.getElementById('cliente-nif').value,
+        clienteNome: document.getElementById('cliente-nome').value,
+        contactos: [
+            {
+                tipoContacto: 1,
+                contacto: document.getElementById('cliente-telefone').value
+            }
+        ]
     };
-    
-    // Validar
-    const nifResult = schemas.nif().validate(data.nif);
-    if (!nifResult.valid) {
-        showFieldError('cliente-nif', nifResult.error);
-        return;
-    }
-    
-    const emailResult = schemas.email().validate(data.email);
-    if (!emailResult.valid) {
-        showFieldError('cliente-email', emailResult.error);
-        return;
-    }
     
     try {
         appStore.set({ loading: true });
         
-        if (id) {
-            await endpoints.updateCliente(id, data);
+        if (nif) {
+            await endpoints.updateCliente(nif, data);
             toast.success('Cliente atualizado com sucesso!');
         } else {
             await endpoints.createCliente(data);
@@ -260,63 +212,45 @@ async function handleSaveCliente(e) {
         loadClientes();
     } catch (error) {
         appStore.set({ loading: false });
-        
-        if (error?.status === 0) {
-            toast.error('⚠ API indisponível. Não é possível salvar no momento.');
-        } else {
-            toast.error(error?.message || 'Erro ao salvar cliente');
-        }
+        toast.error(error?.message || 'Erro ao salvar cliente');
     }
 }
 
-/**
- * Editar cliente
- */
-function editCliente(id) {
+function editCliente(nif) {
     const clientes = appStore.get('clientes') || [];
-    const cliente = clientes.find(c => c.id === id);
-    
+    const cliente = clientes.find(c => c.clienteNif === nif);
     if (!cliente) return;
-    
-    document.getElementById('cliente-id').value = cliente.id;
-    document.getElementById('cliente-nif').value = cliente.nif;
-    document.getElementById('cliente-nome').value = cliente.nome;
-    document.getElementById('cliente-email').value = cliente.email || '';
-    document.getElementById('cliente-telefone').value = cliente.telefone || '';
-    document.getElementById('cliente-endereco').value = cliente.endereco || '';
-    
+
+    document.getElementById('cliente-id').value = cliente.clienteNif;
+    document.getElementById('cliente-nif').value = cliente.clienteNif;
+    document.getElementById('cliente-nome').value = cliente.clienteNome;
+    document.getElementById('cliente-email').value =
+        cliente.contactos?.find(ct => ct.tipoContacto?.descricao?.toLowerCase() === 'email')?.contacto || '';
+    document.getElementById('cliente-telefone').value =
+        cliente.contactos?.find(ct => ct.tipoContacto?.descricao?.toLowerCase() === 'telefone')?.contacto || '';
+    document.getElementById('cliente-endereco').value = '';
+
     document.getElementById('modal-cliente-title').textContent = 'Editar Cliente';
     openModal('cliente');
 }
 
-/**
- * Excluir cliente
- */
-async function deleteCliente(id) {
+async function deleteCliente(nif) {
     if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
-    
     try {
-        await endpoints.deleteCliente(id);
+        await endpoints.deleteCliente(nif);
         toast.success('Cliente excluído com sucesso!');
         loadClientes();
     } catch (error) {
-        console.log('Erro ao excluir cliente:', error);
-        toast.success('Cliente excluído (modo demo)!');
-        loadClientes();
+        toast.error(error?.message || 'Erro ao excluir cliente');
     }
 }
 
-/**
- * Mostrar erro de campo
- */
 function showFieldError(fieldId, message) {
     const errorEl = document.getElementById(`${fieldId}-error`);
     const inputEl = document.getElementById(fieldId);
-    
     if (errorEl && inputEl) {
         errorEl.textContent = message;
         inputEl.classList.add('error');
-        
         setTimeout(() => {
             errorEl.textContent = '';
             inputEl.classList.remove('error');
@@ -324,15 +258,4 @@ function showFieldError(fieldId, message) {
     }
 }
 
-function generateDemoClientes() {
-    return [
-        { id: 1, nif: '123456789', nome: 'João Manuel da Silva', email: 'joao@email.com', telefone: '921234567', endereco: 'Luanda, Angola' },
-        { id: 2, nif: '234567890', nome: 'Maria José Pereira', email: 'maria@email.com', telefone: '922345678', endereco: 'Benguela, Angola' },
-        { id: 3, nif: '345678901', nome: 'António Carlos Ferreira', email: 'antonio@email.com', telefone: '923456789', endereco: 'Huíla, Angola' },
-        { id: 4, nif: '456789012', nome: 'Ana Paula dos Santos', email: 'ana@email.com', telefone: '924567890', endereco: 'Luanda, Angola' },
-        { id: 5, nif: '567890123', nome: 'Pedro Miguel Costa', email: 'pedro@email.com', telefone: '925678901', endereco: 'Namibe, Angola' }
-    ];
-}
-
-// Exportar
 window.renderClientes = renderClientes;

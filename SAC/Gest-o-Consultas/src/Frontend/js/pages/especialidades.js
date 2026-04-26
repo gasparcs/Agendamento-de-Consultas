@@ -26,8 +26,14 @@ function renderEspecialidades() {
         
         <div class="modal-overlay" id="modal-especialidade">
             <div class="modal">
-                <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Nova Especialidade</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 600;" id="modal-especialidade-title">Nova Especialidade</h2>
+                    <button class="btn btn-secondary" style="padding: 8px;" onclick="closeModal('especialidade')">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
                 <form id="form-especialidade">
+                    <input type="hidden" id="especialidade-id">
                     <div class="form-group">
                         <label class="form-label">Nome *</label>
                         <input type="text" id="esp-nome" class="form-input" placeholder="Cardiologia" required>
@@ -36,9 +42,18 @@ function renderEspecialidades() {
                         <label class="form-label">Descrição</label>
                         <textarea id="esp-descricao" class="form-input" rows="3" placeholder="Descrição da especialidade..."></textarea>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select id="esp-estado" class="form-input">
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('especialidade')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Guardar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="save"></i>Guardar
+                        </button>
                     </div>
                 </form>
             </div>
@@ -56,16 +71,12 @@ async function loadEspecialidades() {
         appStore.set({ especialidades });
         renderEspecialidadesGrid(especialidades);
     } catch (error) {
-        const demo = [
-            { id: 1, nome: 'Cardiologia', descricao: 'Doenças do coração e sistema cardiovascular' },
-            { id: 2, nome: 'Dermatologia', descricao: 'Tratamento de pele, cabelos e unhas' },
-            { id: 3, nome: 'Pediatria', descricao: 'Cuidados de saúde infantil' },
-            { id: 4, nome: 'Ortopedia', descricao: 'Sistema musculoesquelético' },
-            { id: 5, nome: 'Neurologia', descricao: 'Doenças do sistema nervoso' },
-            { id: 6, nome: 'Oftalmologia', descricao: 'Tratamento de doenças oculares' }
-        ];
-        appStore.set({ especialidades: demo });
-        renderEspecialidadesGrid(demo);
+        console.error('Erro ao carregar especialidades:', error);
+        toast.error(error?.message || 'Erro ao carregar especialidades');
+        document.getElementById('especialidades-grid').innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-500);">
+                Erro ao carregar especialidades
+            </div>`;
     }
 }
 
@@ -74,7 +85,10 @@ function renderEspecialidadesGrid(especialidades) {
     if (!grid) return;
     
     if (especialidades.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-500);">Nenhuma especialidade encontrada</div>';
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-500);">
+                Nenhuma especialidade encontrada
+            </div>`;
         return;
     }
     
@@ -84,12 +98,29 @@ function renderEspecialidadesGrid(especialidades) {
                 <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #0ea5e9, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                     <i data-lucide="stethoscope" style="color: white;"></i>
                 </div>
-                <h3 style="font-size: 18px; font-weight: 600;">${e.nome}</h3>
+                <div>
+                    <h3 style="font-size: 18px; font-weight: 600;">${e.especialidadeNome || '-'}</h3>
+                    <span class="badge badge-${e.especialidadeEstado ? 'success' : 'danger'}">
+                        ${e.especialidadeEstado ? 'Ativo' : 'Inativo'}
+                    </span>
+                </div>
             </div>
-            <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">${e.descricao || 'Sem descrição'}</p>
+            <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 8px;">
+                ${e.especialidadeDescricao || 'Sem descrição'}
+            </p>
+            <p style="font-size: 13px; color: var(--gray-400); margin-bottom: 8px;">
+                Médicos: ${e.medicoEspecialidade?.map(m => m.funcionarioNome).join(', ') || 'Nenhum'}
+            </p>
+            <p style="font-size: 13px; color: var(--gray-400); margin-bottom: 16px;">
+                Serviços: ${e.servicos?.map(s => s.servicoDescricao).join(', ') || 'Nenhum'}
+            </p>
             <div style="display: flex; gap: 8px;">
-                <button class="btn btn-secondary" style="flex: 1;" onclick="editEspecialidade(${e.id})"><i data-lucide="edit-2"></i> Editar</button>
-                <button class="btn btn-danger" style="padding: 8px;" onclick="deleteEspecialidade(${e.id})"><i data-lucide="trash-2"></i></button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="editEspecialidade(${e.especialidadeId})">
+                    <i data-lucide="edit-2"></i> Editar
+                </button>
+                <button class="btn btn-danger" style="padding: 8px;" onclick="deleteEspecialidade(${e.especialidadeId})">
+                    <i data-lucide="trash-2"></i>
+                </button>
             </div>
         </div>
     `).join('');
@@ -99,27 +130,52 @@ function renderEspecialidadesGrid(especialidades) {
 
 async function handleSaveEspecialidade(e) {
     e.preventDefault();
+    
+    const id = document.getElementById('especialidade-id').value;
     const data = {
-        nome: document.getElementById('esp-nome').value,
-        descricao: document.getElementById('esp-descricao').value
+        especialidadeNome: document.getElementById('esp-nome').value,
+        especialidadeDescricao: document.getElementById('esp-descricao').value,
+        especialidadeEstado: document.getElementById('esp-estado').value === 'true'
     };
     
     try {
-        await endpoints.createEspecialidade(data);
-        toast.success('Especialidade criada!');
+        if (id) {
+            await endpoints.updateEspecialidade(id, data);
+            toast.success('Especialidade atualizada com sucesso!');
+        } else {
+            await endpoints.createEspecialidade(data);
+            toast.success('Especialidade criada com sucesso!');
+        }
+        closeModal('especialidade');
+        loadEspecialidades();
     } catch (error) {
-        toast.success('Especialidade criada (demo)!');
+        toast.error(error?.message || 'Erro ao salvar especialidade');
     }
-    closeModal('especialidade');
-    loadEspecialidades();
 }
 
-function editEspecialidade(id) { toast.info('Em desenvolvimento'); }
+function editEspecialidade(id) {
+    const especialidades = appStore.get('especialidades') || [];
+    const esp = especialidades.find(e => e.especialidadeId === id);
+    if (!esp) return;
+
+    document.getElementById('especialidade-id').value = esp.especialidadeId;
+    document.getElementById('esp-nome').value = esp.especialidadeNome;
+    document.getElementById('esp-descricao').value = esp.especialidadeDescricao || '';
+    document.getElementById('esp-estado').value = esp.especialidadeEstado ? 'true' : 'false';
+
+    document.getElementById('modal-especialidade-title').textContent = 'Editar Especialidade';
+    openModal('especialidade');
+}
+
 async function deleteEspecialidade(id) {
-    if (!confirm('Excluir especialidade?')) return;
-    try { await endpoints.deleteEspecialidade(id); toast.success('Especialidade excluída!'); } 
-    catch { toast.success('Especialidade excluída (demo)!'); }
-    loadEspecialidades();
+    if (!confirm('Tem certeza que deseja excluir esta especialidade?')) return;
+    try {
+        await endpoints.deleteEspecialidade(id);
+        toast.success('Especialidade excluída com sucesso!');
+        loadEspecialidades();
+    } catch (error) {
+        toast.error(error?.message || 'Erro ao excluir especialidade');
+    }
 }
 
 window.renderEspecialidades = renderEspecialidades;

@@ -70,7 +70,7 @@ ISmsService sms)
 
         await repository.AddAsync(model);
 
-        string texto = $"Caro sr(a) {model.Nome}, foste cadastrado na plataforma do predio azul, acesse o sistema no link: www.predioazul.com, use a seguinte credencial: Telefone : {model.Contactos} e Senha : {senha}";
+        string texto = $"Caro sr(a) {model.Nome}, foste cadastrado na plataforma do centro médico Kigramed, acesse o sistema no link: www.kigramed.com, use a seguinte credencial: Nif : {model.Nif} e Senha : {senha}";
 
         var contato = model.Contactos.FirstOrDefault();
 

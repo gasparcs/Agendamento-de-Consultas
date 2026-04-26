@@ -19,7 +19,6 @@ function renderConsultas() {
                 </button>
             </div>
             
-            <!-- Filtros -->
             <div class="card">
                 <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                     <div class="search-box" style="flex: 1; min-width: 200px;">
@@ -35,7 +34,6 @@ function renderConsultas() {
                 </div>
             </div>
             
-            <!-- Consultas Table -->
             <div class="card">
                 <table class="table">
                     <thead>
@@ -43,8 +41,8 @@ function renderConsultas() {
                             <th>Data/Hora</th>
                             <th>Paciente</th>
                             <th>Especialidade</th>
-                            <th>Médico</th>
-                            <th>Valor</th>
+                            <th>Serviço</th>
+                            <th>Cliente</th>
                             <th>Estado</th>
                             <th>Ações</th>
                         </tr>
@@ -83,37 +81,27 @@ function renderConsultas() {
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Paciente *</label>
-                        <select id="consulta-paciente" class="form-input" required>
-                            <option value="">Selecione...</option>
-                        </select>
+                        <label class="form-label">ID Médico Especialidade *</label>
+                        <input type="number" id="consulta-medico-especialidade" class="form-input" placeholder="ID da especialidade do médico" required>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">Especialidade *</label>
-                        <select id="consulta-especialidade" class="form-input" required>
-                            <option value="">Selecione...</option>
-                            <option value="Cardiologia">Cardiologia</option>
-                            <option value="Dermatologia">Dermatologia</option>
-                            <option value="Pediatria">Pediatria</option>
-                            <option value="Ortopedia">Ortopedia</option>
-                            <option value="Neurologia">Neurologia</option>
-                        </select>
+                        <label class="form-label">ID Serviço *</label>
+                        <input type="number" id="consulta-servico" class="form-input" placeholder="ID do serviço" required>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">Médico</label>
-                        <select id="consulta-medico" class="form-input">
-                            <option value="">Selecione...</option>
-                            <option value="Dr. Silva">Dr. Silva</option>
-                            <option value="Dra. Santos">Dra. Santos</option>
-                            <option value="Dr. Pereira">Dr. Pereira</option>
-                        </select>
+                        <label class="form-label">ID Paciente *</label>
+                        <input type="number" id="consulta-paciente" class="form-input" placeholder="ID do paciente" required>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">Valor (AOA)</label>
-                        <input type="number" id="consulta-valor" class="form-input" placeholder="0" min="0">
+                        <label class="form-label">Estado *</label>
+                        <select id="consulta-estado" class="form-input" required>
+                            <option value="1">Agendada</option>
+                            <option value="2">Concluída</option>
+                            <option value="3">Cancelada</option>
+                        </select>
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
@@ -130,7 +118,6 @@ function renderConsultas() {
     
     if (window.lucide) lucide.createIcons();
     loadConsultas();
-    
     document.getElementById('form-consulta').addEventListener('submit', handleSaveConsulta);
 }
 
@@ -140,9 +127,12 @@ async function loadConsultas() {
         appStore.set({ consultas });
         renderConsultasTable(consultas);
     } catch (error) {
-        const demo = generateDemoConsultas();
-        appStore.set({ consultas: demo });
-        renderConsultasTable(demo);
+        console.error('Erro ao carregar consultas:', error);
+        toast.error(error?.message || 'Erro ao carregar consultas');
+        document.getElementById('consultas-table').innerHTML = `
+            <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                Erro ao carregar consultas
+            </td></tr>`;
     }
 }
 
@@ -151,24 +141,32 @@ function renderConsultasTable(consultas) {
     if (!tbody) return;
     
     if (consultas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">Nenhuma consulta encontrada</td></tr>';
+        tbody.innerHTML = `
+            <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                Nenhuma consulta encontrada
+            </td></tr>`;
         return;
     }
     
     tbody.innerHTML = consultas.map(c => `
         <tr>
-            <td>${formatDate(c.data)}</td>
-            <td>${c.paciente?.nome || '-'}</td>
-            <td>${c.especialidade || '-'}</td>
-            <td>${c.medico || '-'}</td>
-            <td>${formatCurrency(c.valor)}</td>
-            <td><span class="badge badge-${c.estado === 'Agendada' ? 'success' : c.estado === 'Cancelada' ? 'danger' : 'info'}">${c.estado || 'Agendada'}</span></td>
+            <td>${c.dataConsulta ? new Date(c.dataConsulta).toLocaleString('pt-PT') : '-'}</td>
+            <td>${c.idPaciente || '-'}</td>
+            <td>${c.idMedicoEspecialidade || '-'}</td>
+            <td>${c.servicos || '-'}</td>
+            <td>${c.cliente || '-'}</td>
+            <td>
+                <span class="badge badge-${
+                    c.idEstado === 'Agendada' ? 'success' : 
+                    c.idEstado === 'Cancelada' ? 'danger' : 'info'
+                }">${c.idEstado || 'Agendada'}</span>
+            </td>
             <td>
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editConsulta(${c.id})">
+                    <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editConsulta(${c.idConsulta})">
                         <i data-lucide="edit-2"></i>
                     </button>
-                    <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteConsulta(${c.id})">
+                    <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteConsulta(${c.idConsulta})">
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
@@ -182,35 +180,38 @@ function renderConsultasTable(consultas) {
 function filterConsultas(query) {
     const consultas = appStore.get('consultas') || [];
     const filtered = consultas.filter(c => 
-        c.paciente?.nome?.toLowerCase().includes(query.toLowerCase()) ||
-        c.especialidade?.toLowerCase().includes(query.toLowerCase())
+        c.idPaciente?.toLowerCase().includes(query.toLowerCase()) ||
+        c.idMedicoEspecialidade?.toLowerCase().includes(query.toLowerCase()) ||
+        c.cliente?.toLowerCase().includes(query.toLowerCase())
     );
     renderConsultasTable(filtered);
 }
 
 function filterByStatus(status) {
     const consultas = appStore.get('consultas') || [];
-    const filtered = status ? consultas.filter(c => c.estado === status) : consultas;
+    const filtered = status ? consultas.filter(c => c.idEstado === status) : consultas;
     renderConsultasTable(filtered);
 }
 
 async function handleSaveConsulta(e) {
     e.preventDefault();
+    
     const data = {
-        data: document.getElementById('consulta-data').value + 'T' + document.getElementById('consulta-hora').value,
-        especialidade: document.getElementById('consulta-especialidade').value,
-        medico: document.getElementById('consulta-medico').value,
-        valor: parseFloat(document.getElementById('consulta-valor').value) || 0
+        idMedicoEspecialidade: parseInt(document.getElementById('consulta-medico-especialidade').value),
+        idServico: parseInt(document.getElementById('consulta-servico').value),
+        idPaciente: parseInt(document.getElementById('consulta-paciente').value),
+        idEstado: parseInt(document.getElementById('consulta-estado').value),
+        dataConsulta: document.getElementById('consulta-data').value + 'T' + document.getElementById('consulta-hora').value
     };
     
     try {
         await endpoints.createConsulta(data);
-        toast.success('Consulta agendada!');
+        toast.success('Consulta agendada com sucesso!');
+        closeModal('consulta');
+        loadConsultas();
     } catch (error) {
-        toast.success('Consulta agendada (demo)!');
+        toast.error(error?.message || 'Erro ao agendar consulta');
     }
-    closeModal('consulta');
-    loadConsultas();
 }
 
 function editConsulta(id) {
@@ -221,11 +222,11 @@ async function deleteConsulta(id) {
     if (!confirm('Cancelar esta consulta?')) return;
     try {
         await endpoints.deleteConsulta(id);
-        toast.success('Consulta cancelada!');
+        toast.success('Consulta cancelada com sucesso!');
+        loadConsultas();
     } catch (error) {
-        toast.success('Consulta cancelada (demo)!');
+        toast.error(error?.message || 'Erro ao cancelar consulta');
     }
-    loadConsultas();
 }
 
 window.renderConsultas = renderConsultas;

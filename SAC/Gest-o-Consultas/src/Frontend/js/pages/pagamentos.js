@@ -102,13 +102,10 @@ async function loadPagamentos() {
         appStore.set({ pagamentos });
         renderPagamentosTable(pagamentos);
     } catch (error) {
-        const demo = [
-            { id: 1, data: new Date().toISOString(), paciente: 'João Manuel', consulta: 'Consulta Geral', valor: 2500, metodo: 'Multicaixa', estado: 'Pago' },
-            { id: 2, data: new Date().toISOString(), paciente: 'Maria José', consulta: 'Cardiologia', valor: 5000, metodo: 'Transferência', estado: 'Pago' },
-            { id: 3, data: new Date().toISOString(), paciente: 'António Silva', consulta: 'Ecografia', valor: 8000, metodo: 'Dinheiro', estado: 'Pendente' }
-        ];
-        appStore.set({ pagamentos: demo });
-        renderPagamentosTable(demo);
+        // ✅ Remove os dados demo e mostra mensagem vazia
+        appStore.set({ pagamentos: [] });
+        renderPagamentosTable([]);
+        toast.warning('Módulo de pagamentos não disponível.');
     }
 }
 
