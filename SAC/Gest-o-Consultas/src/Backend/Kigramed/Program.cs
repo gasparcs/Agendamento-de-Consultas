@@ -41,6 +41,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Kigramed;
+using Kigramed.K02.Infra.Servicos.SmsService;
+using Kigramed.K03.Application.Servico.ISmsService;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -112,6 +115,10 @@ builder.Services.AddScoped<IPegarAuthPeloNifRepository, PegarAuthPeloNifReposito
 //Serviços
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordVerify, PasswordVerifyService>();
+builder.Services.AddScoped<IPasswordCreate, PasswordCreateService>(); 
+builder.Services.AddScoped<IPasswordHash, PasswordHashService>();     
+builder.Services.AddHttpClient<ISmsService, SmsService>();     
+
 //Contrato do Paciente
 builder.Services.AddScoped<IAdicionarRepository<PacienteModel>, AdicionarPacienteRepository>();
 builder.Services.AddScoped<IActualizarRepository<PacienteModel>, AtualizarPacienteRepository>();

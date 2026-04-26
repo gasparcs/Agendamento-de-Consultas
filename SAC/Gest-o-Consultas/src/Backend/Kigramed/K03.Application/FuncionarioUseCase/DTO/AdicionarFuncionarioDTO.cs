@@ -21,6 +21,8 @@ public class AdicionarFuncionarioDTO
    
     [Required(ErrorMessage = "Contactos são obrigatórios")]
     public IEnumerable<AdicionarContactoDTO> Contactos { get; set; } = [];
+
+    public string FuncionarioAuth { get; set; } = string.Empty;
 }
 
 public class AdicionarContactoDTO

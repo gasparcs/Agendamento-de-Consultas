@@ -25,7 +25,7 @@ namespace Kigramed.K01.Controllers
 {  
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     public class AdminController (AdicionarCliente adicionarServices,
      AtualizarCliente atualizarServices,
       ListarClientes listarServices, 
@@ -224,7 +224,7 @@ namespace Kigramed.K01.Controllers
         }
 
         //--------------- funcionario --------------//
-
+        [AllowAnonymous]
         [HttpPost("funcionario")]
         public async Task<IActionResult> AdicionarFuncionario(AdicionarFuncionarioDTO dto)
         {

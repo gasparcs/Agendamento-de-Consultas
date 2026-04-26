@@ -1,9 +1,11 @@
 using System;
 using Kigramed.K03.Application.FuncionarioUseCase.DTO;
+using Kigramed.K03.Application.PerfilUseCase.DTO;
 using Kigramed.K03.Application.Servico.IPasswordService;
 using Kigramed.K03.Application.Servico.ISmsService;
 using Kigramed.K04.Domain.D02.Funcionario;
 using Kigramed.K04.Domain.D04.Contacto;
+using Kigramed.K04.Domain.D05.Auth;
 using Kigramed.K04.Domain.D07.MedicoEspecialidade;
 using Kigramed.K04.Domain.Interfaces;
 
@@ -37,6 +39,14 @@ ISmsService sms)
 
             Estado = dto.FuncionarioEstado,
 
+            Auth = new AuthModel
+                {
+                Senha_hash = senhaHash,
+
+                Senha_Salt = saltHash
+        
+            },
+
             MedicoEspecialidades= dto.Especialidades.Select(e => new MedicoEspecilidadeModel
             {
                 Id_especialidade= e.IdEspecialidade,
@@ -54,15 +64,20 @@ ISmsService sms)
                 Nif_funcionario = dto.FuncionaioNif,
 
                 Nif_cliente = null
-            }).ToList()
+            }).ToList(),
+
         };
 
-        return await repository.AddAsync(model);
+        await repository.AddAsync(model);
 
         string texto = $"Caro sr(a) {model.Nome}, foste cadastrado na plataforma do predio azul, acesse o sistema no link: www.predioazul.com, use a seguinte credencial: Telefone : {model.Contactos} e Senha : {senha}";
 
-        
+        var contato = model.Contactos.FirstOrDefault();
 
-        var smsResponse = await sms.EnviarAsync(model.Contactos,texto, "101010101010");
+        if (contato is null) return "Telefone não válido";
+
+        var smsResponse = await sms.EnviarAsync(contato.Contacto, texto, "101010101010");
+
+       return smsResponse ? "Funcionário cadastrado e SMS enviado com sucesso!" : "Funcionário cadastrado, mas SMS falhou.";
     }
 }
