@@ -11,7 +11,9 @@ public class ListarServicoRepository(KigramedDbContext context) : IListagemRepos
     public async Task<IEnumerable<ServicoModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
         var servicos = await context.Tabelatb08_servico
-        .Include(e=>e.Especialidade)
+        .Include(e => e.Especialidade)
+        .Skip((pagina - 1) * quantidade)
+        .Take(quantidade)
         .ToListAsync();
         return servicos;
     }

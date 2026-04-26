@@ -10,11 +10,13 @@ public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepo
 {
     public async Task<IEnumerable<ConsultaModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
-       var consultas= await context.Tabelatb15_consulta
-        .Include(me=>me.MedicoEspecialidade).ThenInclude(me => me.Funcionario)
-        .Include(s=>s.Servico)
-        .Include(p=>p.Paciente).ThenInclude(c=>c.Cliente)
-        .Include(e=> e.EstadoConsulta)
+       var consultas = await context.Tabelatb15_consulta
+        .Include(me => me.MedicoEspecialidade).ThenInclude(me => me.Funcionario)
+        .Include(s => s.Servico)
+        .Include(p => p.Paciente).ThenInclude(c => c.Cliente)
+        .Include(e => e.EstadoConsulta)
+        .Skip((pagina - 1) * quantidade)
+        .Take(quantidade)
         .ToListAsync();
         return consultas;
     }

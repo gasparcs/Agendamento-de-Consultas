@@ -7,7 +7,6 @@ using Kigramed.K02.Infra.Reporitory.Funcionario;
 using Kigramed.K02.Infra.Reporitory.Paciente;
 using Kigramed.K02.Infra.Reporitory.Pagamento;
 using Kigramed.K02.Infra.Reporitory.Auth;
-using Kigramed.K02.Infra.Reporitory.Funcionario;
 using Kigramed.K02.Infra.Servicos.AuthServico;
 using Kigramed.K02.Infra.Servicos.PasswordService;
 using Kigramed.K03.Application.AuthUseCase.Comand;
@@ -41,6 +40,7 @@ using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Kigramed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -194,6 +194,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

@@ -10,10 +10,12 @@ public class ListarClientesRepository(KigramedDbContext context) : IListagemRepo
 {
     public async Task<IEnumerable<ClienteModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
-        var clientes =await context.Tabelatb09_cliente
-        .Include(p =>p.Pacientes)
-        .Include(c =>c.Contactos).ThenInclude(c=>c.TipoContacto)
+        var clientes = await context.Tabelatb09_cliente
+        .Include(p => p.Pacientes)
+        .Include(c => c.Contactos).ThenInclude(c => c.TipoContacto)
         .Include(a => a.Pagamentos)
+        .Skip((pagina - 1) * quantidade)
+        .Take(quantidade)
         .ToListAsync();
         return clientes;
     }

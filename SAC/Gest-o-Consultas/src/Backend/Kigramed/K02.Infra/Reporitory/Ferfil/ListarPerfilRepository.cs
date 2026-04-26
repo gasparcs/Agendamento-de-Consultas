@@ -10,8 +10,10 @@ public class ListarPerfilRepository(KigramedDbContext context) : IListagemReposi
 {
     public async Task<IEnumerable<PerfilModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
-         var perfis = await context.Tabelatb01_perfil.Include(f =>f.Funcionarios)
-         .Include(pf=>pf.PerfisPermissoes).ThenInclude(pp => pp.Permissao)
+         var perfis = await context.Tabelatb01_perfil.Include(f => f.Funcionarios)
+         .Include(pf => pf.PerfisPermissoes).ThenInclude(pp => pp.Permissao)
+         .Skip((pagina - 1) * quantidade)
+         .Take(quantidade)
          .ToListAsync();
          return perfis;
          

@@ -11,11 +11,13 @@ public class ListarPagamentoRepository(KigramedDbContext context) : IListagemRep
     public async Task<IEnumerable<PagamentoModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
         var pagamentos = await context.Tabelatb14_pagamento
-        .Include(c=>c.Cliente)
-        .Include(f=>f.Funcionario)
-        .Include(c=>c.Comprovativo)
-        .Include(e=>e.Data_envio)
+        .Include(c => c.Cliente)
+        .Include(f => f.Funcionario)
+        .Include(c => c.Comprovativo)
+        .Include(e => e.Data_envio)
         .Include(p => p.PagamentoConsultas)
+        .Skip((pagina - 1) * quantidade)
+        .Take(quantidade)
         .ToListAsync();
         return pagamentos;
     }
