@@ -9,6 +9,7 @@ using Kigramed.K03.Application.PacienteUseCase.Comand;
 using Kigramed.K03.Application.PacienteUseCase.DTO;
 using Kigramed.K03.Application.PacienteUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace Kigramed.K01.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Secretaria")]
     public class SecretariaController 
     (
       AdicionarCliente adicionarServices,
@@ -80,7 +82,7 @@ namespace Kigramed.K01.Controllers
         }
 
         //método remover
-        [HttpDelete("cliente /{nif}")]
+        [HttpDelete("cliente/{nif}")]
         public async Task<IActionResult> RemoverCliente(string nif)
         {
             var resposta = await removerServices.ExecuteAsync(nif);

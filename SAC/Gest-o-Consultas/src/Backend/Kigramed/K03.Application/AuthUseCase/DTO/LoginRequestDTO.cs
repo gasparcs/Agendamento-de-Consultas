@@ -8,7 +8,7 @@ public class LoginRequestDTO
  
     [Required]
     [MaxLength(20)]
-    public string Telefone { get; set; } = string.Empty;
+    public string Nif { get; set; } = string.Empty;
 
     [Required]
     [MinLength(4)]

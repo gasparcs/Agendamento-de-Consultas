@@ -6,8 +6,11 @@ using Kigramed.K02.Infra.Reporitory.Ferfil;
 using Kigramed.K02.Infra.Reporitory.Funcionario;
 using Kigramed.K02.Infra.Reporitory.Paciente;
 using Kigramed.K02.Infra.Reporitory.Pagamento;
-using Kigramed.K02.Infra.Reporitory.Servico;
-using Kigramed.K03.Application.ClienteUseCase.Comand;
+using Kigramed.K02.Infra.Reporitory.Auth;
+using Kigramed.K02.Infra.Reporitory.Funcionario;
+using Kigramed.K02.Infra.Servicos.AuthServico;
+using Kigramed.K02.Infra.Servicos.PasswordService;
+using Kigramed.K03.Application.AuthUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
 using Kigramed.K03.Application.ConsultaUseCase.Comand;
 using Kigramed.K03.Application.ConsultaUseCase.Queries;
@@ -31,6 +34,13 @@ using Kigramed.K04.Domain.D14.Pagamento;
 using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Kigramed.K03.Application.Servico.ITokenService;
+using Kigramed.K03.Application.Servico.IPasswordService;
+using Kigramed.K02.Infra.Reporitory.Servico;
+using Kigramed.K03.Application.ClienteUseCase.Comand;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +51,31 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 string conexao= builder.Configuration.GetConnectionString("ConexaoLocal")!;
 builder.Services.AddDbContext<KigramedDbContext>(options => options.UseNpgsql(conexao));
+
+// Configurar autenticação JWT
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "sua-chave-secreta-muito-longa-e-segura-aqui";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "Kigramed";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "KigramedApi";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
  
 //Contratos do Cliente 
 builder.Services.AddScoped<IAdicionarRepository<ClienteModel>, AdicionarClienteRepository>();
@@ -70,7 +105,13 @@ builder.Services.AddScoped<IActualizarRepository<FuncionarioModel>, AtualizarFun
 builder.Services.AddScoped<IListagemRepository<FuncionarioModel>, ListarFuncionarioRepository>();
 builder.Services.AddScoped<IPegarpeloNifReporitory<FuncionarioModel>, PegarnifFuncionarioRepository>();
 builder.Services.AddScoped<IPegarpeloTextoRepository<FuncionarioModel>, PegartextoFuncionarioRepository>();
+builder.Services.AddScoped<IPegarFuncionarioPeloTelefoneRepository, PegarFuncionarioPeloTelefoneRepository>();
 builder.Services.AddScoped<IRemoverRepository<FuncionarioModel>, RemoverFuncionarioRepository>();
+//Contratos do Auth
+builder.Services.AddScoped<IPegarAuthPeloNifRepository, PegarAuthPeloNifRepository>();
+//Serviços
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IPasswordVerify, PasswordVerifyService>();
 //Contrato do Paciente
 builder.Services.AddScoped<IAdicionarRepository<PacienteModel>, AdicionarPacienteRepository>();
 builder.Services.AddScoped<IActualizarRepository<PacienteModel>, AtualizarPacienteRepository>();
@@ -109,6 +150,8 @@ builder.Services.AddTransient<PegarFuncionarioPeloNif>();
 builder.Services.AddTransient<PegarFuncionarioPeloTexto>();
 builder.Services.AddTransient<AtualizarFuncionario>();
 builder.Services.AddTransient<RemoverFuncionario>();
+//casos de uso auth
+builder.Services.AddTransient<LoginUsuario>();
 
 //casos de uso especialidademodel
 builder.Services.AddTransient<AdicionarEspecialidade>();
@@ -136,6 +179,7 @@ builder.Services.AddTransient<PegarPacientePeloTexto>();
 
 //casos de uso consultamodel
 builder.Services.AddTransient<AdicionarConsulta>();
+builder.Services.AddTransient<AtualizarConsulta>();
 builder.Services.AddTransient<ListarConsultas>();
 
 var app = builder.Build();
@@ -148,6 +192,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -17,6 +17,7 @@ using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.DTO;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace Kigramed.K01.Controllers
 {  
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminController (AdicionarCliente adicionarServices,
      AtualizarCliente atualizarServices,
       ListarClientes listarServices, 
@@ -102,7 +104,7 @@ namespace Kigramed.K01.Controllers
         }
 
         //método remover
-        [HttpDelete("cliente /{nif}")]
+        [HttpDelete("cliente/{nif}")]
         public async Task<IActionResult> RemoverCliente(string nif)
         {
             var resposta = await removerServices.ExecuteAsync(nif);
@@ -145,6 +147,26 @@ namespace Kigramed.K01.Controllers
         {
             var resposta = await listarconsultaServices.ExecuteAsync();
             return Ok(resposta);
+        }
+
+        [HttpPut("consulta/{id}")]
+        public async Task<IActionResult> AtualizarConsulta(int id, AtualizarConsultaDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return StatusCode(400, ModelState);
+
+            if (id != dto.Id)
+                return StatusCode(400, "ID da consulta não corresponde");
+
+            var resposta = await adicionarconsultServices.ExecuteAsync(new AdicionarConsultaDTO
+            {
+                IdMedicoEspecialidade = int.Parse(dto.Consulta_medico_especialiade),
+                IdServico = int.Parse(dto.Consultaservico),
+                IdPaciente = int.Parse(dto.Consultapaciente),
+                IdEstado = dto.ConsultaEstado ? 1 : 0,
+                DataConsulta = dto.ConsultaData
+            });
+            return resposta.Contains("sucesso") ? StatusCode(200, resposta) : StatusCode(400, resposta);
         }
 
         //--------------- Especialidade -----------//

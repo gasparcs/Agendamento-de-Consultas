@@ -1,73 +1,64 @@
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using Kigramed.K03.Application.AuthUseCase.DTO;
 using Kigramed.K03.Application.Servico.IPasswordService;
 using Kigramed.K03.Application.Servico.ITokenService;
 using Kigramed.K04.Domain.D02.Funcionario;
-using Kigramed.K04.Domain.D09.Cliente;
+using Kigramed.K04.Domain.D05.Auth;
 using Kigramed.K04.Domain.Interfaces;
 
 namespace Kigramed.K03.Application.AuthUseCase.Comand;
 
 public class LoginUsuario(
-    IPegarpeloNifReporitory<FuncionarioModel> pegarpelonif,
-    IPegarpeloId<ClienteModel> pegarpeloid,
-     IPasswordVerify passwordVerify,
+    IPegarAuthPeloNifRepository authRepository,
+    IPasswordVerify passwordVerify,
     ITokenService tokenService)
-
 {
-
-    public async Task<(LoginResponseDTO? dados, string mensagem, int codigo)> Executar(LoginRequestDTO dto)
+    public async Task<LoginResponseDTO?> ExecuteAsync(LoginRequestDTO request)
     {
-        var funcionario = await pegarpelonif.PegarpeloNifAsync(dto.Telefone);
-        if (funcionario is not null)
+        // Buscar dados de autenticação pelo NIF
+        var auth = await authRepository.PegarPeloNifAsync(request.Nif);
+        if (auth == null)
         {
-            if (!funcionario.Estado)
-                return (null, "Usuario desativado.", 403);
-
-            bool senhaOk = await passwordVerify.VerifyAsync(dto.Senha, funcionario.Senha, funcionario.Salt);
-            if (!senhaOk)
-                return (null, "Credenciais invalidas.", 401);
-
-            var (perfil, _, _) = await pesquisarPerfil.PesquisarPorIdAsync(funcionario.IdPerfil);
-            string role = NormalizarPerfil(perfil?.Descricao);
-
-            string token = tokenService.GerarToken(funcionario.Id, funcionario.Nome, funcionario.Telefone, role, "Funcionario");
-            var response = new LoginResponseDTO
-            {
-                UsuarioId = funcionario.Id,
-                Nome = funcionario.Nome,
-                Telefone = funcionario.Telefone,
-                Perfil = role,
-                TipoUsuario = "Funcionario",
-                Token = token
-            };
-
-            return (response, "Login realizado com sucesso.", 200);
+            return null; // Usuário não encontrado
         }
 
-        var inquilino = await pegarpeloid.PegarAsync(dto.Telefone);
-        if (inquilino is null)
-            return (null, "Credenciais invalidas.", 401);
-
-        if (!inquilino.Estado)
-            return (null, "Usuario desativado.", 403);
-
-        bool senhaValida = await passwordVerify.VerifyAsync(dto.Senha, inquilino.Senha, inquilino.Salt);
+        // Verificar senha
+        bool senhaValida = await passwordVerify.VerifyAsync(request.Senha, auth.Senha_hash, auth.Senha_Salt);
         if (!senhaValida)
-            return (null, "Credenciais invalidas.", 401);
-
-        string tokenInquilino = tokenService.GerarToken(inquilino.Id, inquilino.Nome, inquilino.Telefone, "Inquilino", "Inquilino");
-        var respostaInquilino = new LoginResponseDTO
         {
-            UsuarioId = inquilino.Id,
-            Nome = inquilino.Nome,
-            Telefone = inquilino.Telefone,
-            Perfil = "Inquilino",
-            TipoUsuario = "Inquilino",
-            Token = tokenInquilino
-        };
+            return null; // Senha inválida
+        }
 
-        return (respostaInquilino, "Login realizado com sucesso.", 200);
+        // Normalizar o perfil para role
+        string normalizedRole = NormalizarPerfil(auth.Funcionario.Perfil?.Descricao);
+
+        // Obter telefone
+        string telefone = auth.Funcionario.Contactos
+            .FirstOrDefault(c => c.TipoContacto.Descricao.ToLower() == "telefone")?
+            .Contacto ?? string.Empty;
+
+        // Gerar token
+        string token = tokenService.GerarToken(
+            nif: auth.Nif_funcionario,
+            nome: auth.Funcionario.Nome,
+            telefone: telefone,
+            role: normalizedRole,
+            perfil: auth.Funcionario.Perfil?.Descricao ?? "Sem Perfil"
+        );
+
+        // Retornar resposta
+        return new LoginResponseDTO
+        {
+            Nif = auth.Nif_funcionario,
+            Nome = auth.Funcionario.Nome,
+            Perfil = auth.Funcionario.Perfil?.Descricao ?? "Sem Perfil",
+            telefone = telefone,
+            Token = token,
+            role = normalizedRole
+        };
     }
 
     private static string NormalizarPerfil(string? descricaoPerfil)
@@ -80,11 +71,11 @@ public class LoginUsuario(
         if (semAcentos.Contains("admin"))
             return "Admin";
 
-        if (semAcentos.Contains("sind"))
-            return "Sindico";
+        if (semAcentos.Contains("medico") || semAcentos.Contains("médico"))
+            return "Medico";
 
-        if (semAcentos.Contains("inquilino"))
-            return "Inquilino";
+        if (semAcentos.Contains("secretaria") || semAcentos.Contains("secretário"))
+            return "Secretaria";
 
         return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(semAcentos);
     }
