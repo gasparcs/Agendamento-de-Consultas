@@ -26,6 +26,8 @@
     <Folder Include="K02.Infra\Servicos\PasswordService\" />
     <Folder Include="K02.Infra\Servicos\SmsService\" />
     <Folder Include="K03.Application\AuthUseCase\" />
+    <Folder Include="K03.Application\AuthUseCase\Comand\" />
+    <Folder Include="K03.Application\AuthUseCase\DTO\" />
     <Folder Include="K03.Application\ClienteUseCase\Comand\" />
     <Folder Include="K03.Application\ClienteUseCase\DTO\" />
     <Folder Include="K03.Application\ConsultaUseCase\" />
@@ -45,8 +47,6 @@
     <Folder Include="K03.Application\PerfilUseCase\" />
     <Folder Include="K03.Application\PerfilUseCase\DTO\" />
     <Folder Include="K03.Application\PerfilUseCase\Queries\" />
-    <Folder Include="K03.Application\Servico\" />
-    <Folder Include="K03.Application\Servico\IPasswordService\" />
     <Folder Include="K03.Application\Servico\ISmsService\" />
     <Folder Include="K03.Application\Servico\ITokenService\" />
     <Folder Include="K03.Application\SmsUseCase\" />
