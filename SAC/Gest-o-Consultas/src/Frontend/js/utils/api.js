@@ -7,7 +7,8 @@ const API_BASE_URL = 'http://localhost:5000/api';
 
 // Obter token dos cookies
 function getToken() {
-    return getCookie('token');
+    const creds = authManager.getCredentials();
+    return creds?.token || getCookie('token');
 }
 
 // Configuração padrão
@@ -39,14 +40,49 @@ const api = {
         
         try {
             const response = await fetch(url, config);
-            const data = await response.json().catch(() => null);
+            const contentType = response.headers.get('content-type');
+            const isJson = contentType?.includes('application/json');
+            
+            let data;
+            try {
+                data = isJson ? await response.json() : await response.text();
+            } catch (e) {
+                data = null;
+            }
+            
+            // Tratar erro 401 (Unauthorized)
+            if (response.status === 401) {
+                authManager.clearCredentials();
+                appStore.set({
+                    token: null,
+                    user: null,
+                    isAuthenticated: false
+                });
+                router.navigate('login');
+                throw {
+                    status: 401,
+                    message: 'Sessão expirada. Faça login novamente.'
+                };
+            }
             
             if (!response.ok) {
-                throw { status: response.status, message: data?.message || 'Erro na requisição' };
+                throw {
+                    status: response.status,
+                    message: data?.message || data || `Erro ${response.status}`
+                };
             }
             
             return data;
         } catch (error) {
+            // Diferenciar entre erro de rede e erro da API
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                console.warn('⚠ API indisponível (erro de rede)');
+                throw {
+                    status: 0,
+                    message: 'API indisponível. Verifique se o servidor está rodando em http://localhost:5000'
+                };
+            }
+            
             console.error('API Error:', error);
             throw error;
         }
@@ -79,63 +115,64 @@ const api = {
     }
 };
 
-// Endpoints da API
+// Endpoints da API (use role-based paths)
 const endpoints = {
     // Auth
     login: (data) => api.post('/auth/login', data),
+    status: () => api.get('/auth/status'),
     
+    // Secretaria endpoints (CRUD)
     // Clientes
-    getClientes: () => api.get('/clientes'),
-    getClienteById: (id) => api.get(`/clientes/${id}`),
-    getClienteByNif: (nif) => api.get(`/clientes/nif/${nif}`),
-    createCliente: (data) => api.post('/clientes', data),
-    updateCliente: (id, data) => api.put(`/clientes/${id}`, data),
-    deleteCliente: (id) => api.delete(`/clientes/${id}`),
+    getClientes: () => api.get('/secretaria/clientes'),
+    getClienteById: (id) => api.get(`/secretaria/clientes/${id}`),
+    createCliente: (data) => api.post('/secretaria/clientes', data),
+    updateCliente: (id, data) => api.put(`/secretaria/clientes/${id}`, data),
+    deleteCliente: (id) => api.delete(`/secretaria/clientes/${id}`),
     
     // Consultas
-    getConsultas: () => api.get('/consultas'),
-    getConsultaById: (id) => api.get(`/consultas/${id}`),
-    createConsulta: (data) => api.post('/consultas', data),
-    updateConsulta: (id, data) => api.put(`/consultas/${id}`, data),
-    deleteConsulta: (id) => api.delete(`/consultas/${id}`),
+    getConsultas: () => api.get('/secretaria/consultas'),
+    getConsultaById: (id) => api.get(`/secretaria/consultas/${id}`),
+    createConsulta: (data) => api.post('/secretaria/consultas', data),
+    updateConsulta: (id, data) => api.put(`/secretaria/consultas/${id}`, data),
+    deleteConsulta: (id) => api.delete(`/secretaria/consultas/${id}`),
     
     // Pacientes
-    getPacientes: () => api.get('/pacientes'),
-    getPacienteById: (id) => api.get(`/pacientes/${id}`),
-    createPaciente: (data) => api.post('/pacientes', data),
-    updatePaciente: (id, data) => api.put(`/pacientes/${id}`, data),
-    deletePaciente: (id) => api.delete(`/pacientes/${id}`),
+    getPacientes: () => api.get('/secretaria/pacientes'),
+    getPacienteById: (id) => api.get(`/secretaria/pacientes/${id}`),
+    createPaciente: (data) => api.post('/secretaria/pacientes', data),
+    updatePaciente: (id, data) => api.put(`/secretaria/pacientes/${id}`, data),
+    deletePaciente: (id) => api.delete(`/secretaria/pacientes/${id}`),
     
+    // Admin endpoints (full access)
     // Especialidades
-    getEspecialidades: () => api.get('/especialidades'),
-    getEspecialidadeById: (id) => api.get(`/especialidades/${id}`),
-    createEspecialidade: (data) => api.post('/especialidades', data),
-    updateEspecialidade: (id, data) => api.put(`/especialidades/${id}`, data),
-    deleteEspecialidade: (id) => api.delete(`/especialidades/${id}`),
+    getEspecialidades: () => api.get('/admin/especialidades'),
+    getEspecialidadeById: (id) => api.get(`/admin/especialidades/${id}`),
+    createEspecialidade: (data) => api.post('/admin/especialidades', data),
+    updateEspecialidade: (id, data) => api.put(`/admin/especialidades/${id}`, data),
+    deleteEspecialidade: (id) => api.delete(`/admin/especialidades/${id}`),
     
     // Serviços
-    getServicos: () => api.get('/servicos'),
-    getServicoById: (id) => api.get(`/servicos/${id}`),
-    createServico: (data) => api.post('/servicos', data),
-    updateServico: (id, data) => api.put(`/servicos/${id}`, data),
-    deleteServico: (id) => api.delete(`/servicos/${id}`),
+    getServicos: () => api.get('/admin/servicos'),
+    getServicoById: (id) => api.get(`/admin/servicos/${id}`),
+    createServico: (data) => api.post('/admin/servicos', data),
+    updateServico: (id, data) => api.put(`/admin/servicos/${id}`, data),
+    deleteServico: (id) => api.delete(`/admin/servicos/${id}`),
     
     // Funcionários
-    getFuncionarios: () => api.get('/funcionarios'),
-    getFuncionarioById: (id) => api.get(`/funcionarios/${id}`),
-    getFuncionarioByNif: (nif) => api.get(`/funcionarios/nif/${nif}`),
-    createFuncionario: (data) => api.post('/funcionarios', data),
-    updateFuncionario: (id, data) => api.put(`/funcionarios/${id}`, data),
-    deleteFuncionario: (id) => api.delete(`/funcionarios/${id}`),
+    getFuncionarios: () => api.get('/admin/funcionarios'),
+    getFuncionarioById: (id) => api.get(`/admin/funcionarios/${id}`),
+    createFuncionario: (data) => api.post('/admin/funcionarios', data),
+    updateFuncionario: (id, data) => api.put(`/admin/funcionarios/${id}`, data),
+    deleteFuncionario: (id) => api.delete(`/admin/funcionarios/${id}`),
     
     // Pagamentos
-    getPagamentos: () => api.get('/pagamentos'),
-    getPagamentoById: (id) => api.get(`/pagamentos/${id}`),
-    createPagamento: (data) => api.post('/pagamentos', data),
-    deletePagamento: (id) => api.delete(`/pagamentos/${id}`),
+    getPagamentos: () => api.get('/secretaria/pagamentos'),
+    getPagamentoById: (id) => api.get(`/secretaria/pagamentos/${id}`),
+    createPagamento: (data) => api.post('/secretaria/pagamentos', data),
+    deletePagamento: (id) => api.delete(`/secretaria/pagamentos/${id}`),
     
     // Perfis
-    getPerfis: () => api.get('/perfis')
+    getPerfis: () => api.get('/admin/perfis')
 };
 
 // Exportar

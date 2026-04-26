@@ -135,13 +135,15 @@ function renderDashboard() {
  */
 async function loadDashboardData() {
     try {
+        appStore.set({ loading: true });
+        
         // Carregar consultas
         const consultas = await endpoints.getConsultas();
         appStore.set({ consultas });
         
         // Carregar pacientes
         const pacientes = await endpoints.getPacientes();
-        appStore.set({ pacientes });
+        appStore.set({ pacientes, loading: false });
         
         // Atualizar estatísticas
         updateStats(consultas, pacientes);
@@ -156,7 +158,13 @@ async function loadDashboardData() {
         renderProximasConsultas(consultas);
         
     } catch (error) {
-        console.log('Erro ao carregar dados:', error);
+        appStore.set({ loading: false });
+        
+        console.error('Erro ao carregar dados do dashboard:', error);
+        
+        if (error?.status === 0) {
+            toast.warning('⚠ API indisponível. Mostrando dados de demonstração.');
+        }
         
         // Dados de demo
         const demoConsultas = generateDemoConsultas();

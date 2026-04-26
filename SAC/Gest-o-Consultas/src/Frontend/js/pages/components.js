@@ -87,7 +87,7 @@ function renderSidebar() {
  * Logout
  */
 function handleLogout() {
-    removeCookie('token');
+    authManager.clearCredentials();
     appStore.set({
         isAuthenticated: false,
         token: null,

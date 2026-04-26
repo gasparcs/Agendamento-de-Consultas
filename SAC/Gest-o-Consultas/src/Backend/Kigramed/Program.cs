@@ -117,7 +117,18 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordVerify, PasswordVerifyService>();
 builder.Services.AddScoped<IPasswordCreate, PasswordCreateService>(); 
 builder.Services.AddScoped<IPasswordHash, PasswordHashService>();     
-builder.Services.AddHttpClient<ISmsService, SmsService>();     
+builder.Services.AddHttpClient<ISmsService, SmsService>();
+
+// Configurar CORS para Frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:3000", "http://localhost:8080", "http://localhost:5173", "http://127.0.0.1:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials()
+              .WithExposedHeaders("Authorization"));
+});
 
 //Contrato do Paciente
 builder.Services.AddScoped<IAdicionarRepository<PacienteModel>, AdicionarPacienteRepository>();
@@ -198,6 +209,8 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();

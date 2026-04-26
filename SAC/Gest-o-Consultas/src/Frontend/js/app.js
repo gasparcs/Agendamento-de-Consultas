@@ -9,6 +9,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Restaurar credenciais ao carregar
+function initializeAuth() {
+    const creds = authManager.getCredentials();
+    
+    if (creds && authManager.isTokenValid()) {
+        // Token ainda é válido
+        appStore.set({
+            token: creds.token,
+            user: creds.user,
+            isAuthenticated: true
+        });
+        console.log('✓ Credenciais restauradas da sessão anterior');
+    } else if (creds) {
+        // Token expirou
+        console.warn('⚠ Token expirado');
+        authManager.clearCredentials();
+        appStore.set({
+            token: null,
+            user: null,
+            isAuthenticated: false
+        });
+    }
+}
+
+// Proteção de rotas (require autenticação)
+const protectedRoutes = [
+    'dashboard', 'clientes', 'pacientes', 'consultas', 
+    'especialidades', 'servicos', 'funcionarios', 'pagamentos', 
+    'relatorios', 'configuracoes'
+];
+
 // Configurar rotas
 router.addRoute('login', renderLoginPage);
 router.addRoute('dashboard', renderDashboard);
@@ -24,10 +55,18 @@ router.addRoute('configuracoes', renderConfiguracoes);
 
 // Callback de mudança de rota
 router.onChange((path) => {
+    // Verificar se rota protegida
+    if (protectedRoutes.includes(path) && !appStore.get('isAuthenticated')) {
+        console.warn('❌ Rota protegida. Redirecionando para login...');
+        router.navigate('login');
+        return;
+    }
+    
     appStore.set({ currentPage: path });
 });
 
-// Iniciar router
+// Inicializar autenticação e depois iniciar router
+initializeAuth();
 router.start();
 
 // Funções globais para modais

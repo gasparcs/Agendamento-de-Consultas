@@ -66,36 +66,55 @@ async function handleLogin(e) {
     }
     
     try {
-        // Simular login (substituir por chamada real à API)
+        appStore.set({ loading: true });
+        
+        // Fazer chamada real à API
         const response = await endpoints.login({ nif, password });
         
-        // Salvar token
-        setCookie('token', response.token || 'demo-token', 7);
+        // Salvar credenciais com authManager
+        authManager.saveCredentials(response.token, response.user || { nif, nome: response.nome || 'Usuário' }, 120 * 60);
         
         // Atualizar store
         appStore.set({
             isAuthenticated: true,
-            token: response.token || 'demo-token',
-            user: response.user || { nif, nome: 'Usuário Demo' }
+            token: response.token,
+            user: response.user || { nif, nome: response.nome || 'Usuário' },
+            loading: false
         });
         
         toast.success('Login realizado com sucesso!');
         router.navigate('dashboard');
         
     } catch (error) {
-        // Para demo, permitir acesso mesmo sem API
-        console.log('Erro na API, usando modo demo:', error);
+        appStore.set({ loading: false });
         
-        setCookie('token', 'demo-token', 7);
+        console.error('Erro ao fazer login:', error);
         
-        appStore.set({
-            isAuthenticated: true,
-            token: 'demo-token',
-            user: { nif, nome: 'Administrador', perfil: 'Admin' }
-        });
+        const message = error?.message || 'Erro ao conectar com o servidor';
         
-        toast.success('Login realizado (modo demo)!');
-        router.navigate('dashboard');
+        // Para desenvolvimento, permitir demo
+        if (error?.status === 0 || error?.message?.includes('Failed to fetch')) {
+            toast.warning('API indisponível. Usando modo demo.');
+            
+            const demoUser = { 
+                nif, 
+                nome: 'Administrador Demo', 
+                perfil: 'Admin',
+                email: `${nif}@kigramed.com`
+            };
+            
+            authManager.saveCredentials('demo-token-' + Date.now(), demoUser);
+            
+            appStore.set({
+                isAuthenticated: true,
+                token: 'demo-token',
+                user: demoUser
+            });
+            
+            router.navigate('dashboard');
+        } else {
+            toast.error(message);
+        }
     }
 }
 

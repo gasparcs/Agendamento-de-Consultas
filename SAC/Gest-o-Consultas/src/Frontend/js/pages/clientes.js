@@ -124,15 +124,41 @@ function renderClientes() {
  */
 async function loadClientes() {
     try {
+        appStore.set({ loading: true });
         const clientes = await endpoints.getClientes();
-        appStore.set({ clientes });
+        appStore.set({ clientes, loading: false });
         renderClientesTable(clientes);
     } catch (error) {
-        console.log('Erro ao carregar clientes:', error);
-        // Demo data
-        const demoClientes = generateDemoClientes();
-        appStore.set({ clientes: demoClientes });
-        renderClientesTable(demoClientes);
+        appStore.set({ loading: false });
+        
+        console.error('Erro ao carregar clientes:', error);
+        
+        if (error?.status === 0) {
+            // API indisponível
+            toast.error('⚠ API indisponível. Alguns recursos podem estar limitados.');
+            document.getElementById('clientes-table').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        <div style="margin-bottom: 16px;">
+                            <i data-lucide="wifi-off" style="width: 48px; height: 48px; color: var(--warning);"></i>
+                        </div>
+                        <p>Servidor não está respondendo.</p>
+                        <p style="font-size: 12px; margin-top: 8px;">
+                            Certifique-se de que o servidor está rodando em http://localhost:5000
+                        </p>
+                    </td>
+                </tr>
+            `;
+        } else {
+            toast.error(error?.message || 'Erro ao carregar clientes');
+            document.getElementById('clientes-table').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        Erro ao carregar clientes
+                    </td>
+                </tr>
+            `;
+        }
     }
 }
 
@@ -220,6 +246,8 @@ async function handleSaveCliente(e) {
     }
     
     try {
+        appStore.set({ loading: true });
+        
         if (id) {
             await endpoints.updateCliente(id, data);
             toast.success('Cliente atualizado com sucesso!');
@@ -231,10 +259,13 @@ async function handleSaveCliente(e) {
         closeModal('cliente');
         loadClientes();
     } catch (error) {
-        console.log('Erro ao salvar cliente:', error);
-        toast.success('Cliente guardado (modo demo)!');
-        closeModal('cliente');
-        loadClientes();
+        appStore.set({ loading: false });
+        
+        if (error?.status === 0) {
+            toast.error('⚠ API indisponível. Não é possível salvar no momento.');
+        } else {
+            toast.error(error?.message || 'Erro ao salvar cliente');
+        }
     }
 }
 
