@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Especialidade;
 
 public class ListarEspecialidadeRepository(KigramedDbContext context) : IListagemRepository<EspecialidadeModel>
 {
-    public async Task<IEnumerable<EspecialidadeModel>> Listagem()
+    public async Task<IEnumerable<EspecialidadeModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
          var especialidade =await context.Tabelatb06_especialidade.Include(c =>c.MedicoEspecialidades).ThenInclude(me => me.Funcionario)
          .Include(s =>s.Servicos).ToListAsync();

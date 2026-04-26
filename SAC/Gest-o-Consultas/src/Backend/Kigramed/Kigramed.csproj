@@ -15,7 +15,6 @@
   <ItemGroup>
     <Folder Include="K01.Controllers\" />
     <Folder Include="K02.Infra\Data\" />
-    <Folder Include="K02.Infra\Reporitory\Auth\" />
     <Folder Include="K02.Infra\Reporitory\Cliente\" />
     <Folder Include="K02.Infra\Reporitory\Ferfil\" />
     <Folder Include="K02.Infra\Reporitory\Funcionario\" />
@@ -30,9 +29,7 @@
     <Folder Include="K03.Application\AuthUseCase\DTO\" />
     <Folder Include="K03.Application\ClienteUseCase\Comand\" />
     <Folder Include="K03.Application\ClienteUseCase\DTO\" />
-    <Folder Include="K03.Application\ConsultaUseCase\" />
     <Folder Include="K03.Application\ConsultaUseCase\Comand\" />
-    <Folder Include="K03.Application\ConsultaUseCase\DTO\" />
     <Folder Include="K03.Application\ConsultaUseCase\Queries\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\Comand\" />
