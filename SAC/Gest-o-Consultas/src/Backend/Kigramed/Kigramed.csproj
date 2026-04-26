@@ -49,7 +49,8 @@
     <Folder Include="K03.Application\Servico\IPasswordService\" />
     <Folder Include="K03.Application\Servico\ISmsService\" />
     <Folder Include="K03.Application\Servico\ITokenService\" />
-    <Folder Include="K03.Application\SmsUseCase\" />
+    <Folder Include="K03.Application\SmsUseCase\DTO\" />
+    <Folder Include="K03.Application\SmsUseCase\Queries\" />
     <Folder Include="K04.Domain\D01.Perfil\" />
     <Folder Include="K04.Domain\D02.Funcionario\" />
     <Folder Include="K04.Domain\D03.TipoContacto\" />
