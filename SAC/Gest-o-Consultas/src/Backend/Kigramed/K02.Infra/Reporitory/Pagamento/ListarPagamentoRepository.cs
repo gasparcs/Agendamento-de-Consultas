@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Pagamento;
 
 public class ListarPagamentoRepository(KigramedDbContext context) : IListagemRepository<PagamentoModel>
 {
-    public async Task<IEnumerable<PagamentoModel>> Listagem()
+    public async Task<IEnumerable<PagamentoModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
         var pagamentos = await context.Tabelatb14_pagamento
         .Include(c=>c.Cliente)

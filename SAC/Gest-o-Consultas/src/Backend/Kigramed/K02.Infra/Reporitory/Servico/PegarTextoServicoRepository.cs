@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Servico;
 
 public class PegarTextoServicoRepository(KigramedDbContext context) : IPegarpeloTextoRepository<ServicoModel>
 {
-    public async Task<IEnumerable<ServicoModel>> PegarAsync(string texto)
+    public async Task<IEnumerable<ServicoModel>> PegarAsync(string texto, int pagina = 1, int quantidade = 20)
     {
         return await context.Tabelatb08_servico
         .Where(s=>s.Nome.Contains(texto))

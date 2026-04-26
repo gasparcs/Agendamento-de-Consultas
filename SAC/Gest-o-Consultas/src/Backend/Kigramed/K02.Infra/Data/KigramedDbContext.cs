@@ -148,5 +148,6 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
         {
                  entity.HasOne(mc => mc.Consulta).WithOne(c => c.MedicoConsulta).HasForeignKey<MedicoConsultaModel>(fk => fk.Id_consulta);
         });
+
     }
 }
