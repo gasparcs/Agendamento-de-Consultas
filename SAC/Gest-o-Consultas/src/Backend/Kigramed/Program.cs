@@ -1,5 +1,4 @@
 using Kigramed.K02.Infra.Data;
-using Kigramed.K02.Infra.Reporitory.Auth;
 using Kigramed.K02.Infra.Reporitory.Cliente;
 using Kigramed.K02.Infra.Reporitory.Consulta;
 using Kigramed.K02.Infra.Reporitory.Especialidade;
@@ -42,10 +41,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 string conexao= builder.Configuration.GetConnectionString("ConexaoLocal")!;
 builder.Services.AddDbContext<KigramedDbContext>(options => options.UseNpgsql(conexao));
-
-//Contratos da AuthModel
-builder.Services.AddScoped<IAdicionarRepository<AuthModel>, AdicionarAuthRepository>();
-builder.Services.AddScoped<ILoginRepository, LoginRepositoy>(); 
+ 
 //Contratos do Cliente 
 builder.Services.AddScoped<IAdicionarRepository<ClienteModel>, AdicionarClienteRepository>();
 builder.Services.AddScoped<IActualizarRepository<ClienteModel>, AtualizarClienteRepository>();

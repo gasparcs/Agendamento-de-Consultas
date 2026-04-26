@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Consulta;
 
 public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepository<ConsultaModel>
 {
-    public async Task<IEnumerable<ConsultaModel>> Listagem()
+    public async Task<IEnumerable<ConsultaModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
        var consultas= await context.Tabelatb15_consulta
         .Include(me=>me.MedicoEspecialidade).ThenInclude(me => me.Funcionario)

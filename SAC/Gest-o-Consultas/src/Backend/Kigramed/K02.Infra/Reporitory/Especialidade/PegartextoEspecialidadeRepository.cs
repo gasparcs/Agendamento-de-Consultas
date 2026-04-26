@@ -9,7 +9,7 @@ namespace Kigramed.K02.Infra.Reporitory.Especialidade;
 
 public class PegartextoEspecialidadeRepository(KigramedDbContext context) : IPegarpeloTextoRepository<EspecialidadeModel>
 {
-    public async Task<IEnumerable<EspecialidadeModel>> PegarAsync(string texto)
+    public async Task<IEnumerable<EspecialidadeModel>> PegarAsync(string texto,  int pagina = 1, int quantidade = 20)
     {
         return await context.Tabelatb06_especialidade.Where(t => t.Nome.Contains(texto)).Include(p=> p.Servicos).Include(c => c.MedicoEspecialidades).ToListAsync();
     }

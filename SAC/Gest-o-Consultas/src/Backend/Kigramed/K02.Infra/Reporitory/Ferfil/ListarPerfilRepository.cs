@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Ferfil;
 
 public class ListarPerfilRepository(KigramedDbContext context) : IListagemRepository<PerfilModel>
 {
-    public async Task<IEnumerable<PerfilModel>> Listagem()
+    public async Task<IEnumerable<PerfilModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
          var perfis = await context.Tabelatb01_perfil.Include(f =>f.Funcionarios)
          .Include(pf=>pf.PerfisPermissoes).ThenInclude(pp => pp.Permissao)

@@ -8,7 +8,7 @@ namespace Kigramed.K02.Infra.Reporitory.Cliente;
 
 public class ListarClientesRepository(KigramedDbContext context) : IListagemRepository<ClienteModel>
 {
-    public async Task<IEnumerable<ClienteModel>> Listagem()
+    public async Task<IEnumerable<ClienteModel>> Listagem(int pagina = 1, int quantidade = 20)
     {
         var clientes =await context.Tabelatb09_cliente
         .Include(p =>p.Pacientes)

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
@@ -15,7 +16,6 @@
   <ItemGroup>
     <Folder Include="K01.Controllers\" />
     <Folder Include="K02.Infra\Data\" />
-    <Folder Include="K02.Infra\Reporitory\Auth\" />
     <Folder Include="K02.Infra\Reporitory\Cliente\" />
     <Folder Include="K02.Infra\Reporitory\Ferfil\" />
     <Folder Include="K02.Infra\Reporitory\Funcionario\" />
@@ -26,11 +26,11 @@
     <Folder Include="K02.Infra\Servicos\PasswordService\" />
     <Folder Include="K02.Infra\Servicos\SmsService\" />
     <Folder Include="K03.Application\AuthUseCase\" />
+    <Folder Include="K03.Application\AuthUseCase\Comand\" />
+    <Folder Include="K03.Application\AuthUseCase\DTO\" />
     <Folder Include="K03.Application\ClienteUseCase\Comand\" />
     <Folder Include="K03.Application\ClienteUseCase\DTO\" />
-    <Folder Include="K03.Application\ConsultaUseCase\" />
     <Folder Include="K03.Application\ConsultaUseCase\Comand\" />
-    <Folder Include="K03.Application\ConsultaUseCase\DTO\" />
     <Folder Include="K03.Application\ConsultaUseCase\Queries\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\Comand\" />
@@ -45,7 +45,6 @@
     <Folder Include="K03.Application\PerfilUseCase\" />
     <Folder Include="K03.Application\PerfilUseCase\DTO\" />
     <Folder Include="K03.Application\PerfilUseCase\Queries\" />
-    <Folder Include="K03.Application\Servico\" />
     <Folder Include="K03.Application\Servico\IPasswordService\" />
     <Folder Include="K03.Application\Servico\ISmsService\" />
     <Folder Include="K03.Application\Servico\ITokenService\" />
