@@ -1,4 +1,5 @@
 using Kigramed.K02.Infra.Reporitory.EstadoConsulta;
+using Kigramed.K02.Infra.Reporitory.MedicoEspecialidade;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.DTO;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
@@ -77,8 +78,8 @@ namespace Kigramed.K01.Controllers
         PegarServicoPeloId pegarservicoidServices,
         PegarServicoPeloTexto pegarservicotextoServices,
 
-        ListarEstadosConsulta listarEstadosConsultaServices,
-        ListarMedicosEspecialidades listarMedicosEspecialidadesServices
+        ListarEstadoConsulta listarEstadosConsultaServices,
+        ListarMedicoEspecialidade listarMedicosEspecialidadesServices
     
       )
       : ControllerBase
@@ -442,7 +443,7 @@ namespace Kigramed.K01.Controllers
         {
             try
             {
-                var estados = await listarEstadosConsultaServices.ExecuteAsync();
+                var estados = await listarEstadosConsultaServices.Listagem();
                 return Ok(estados.Select(e => new { id = e.Id, descricao = e.Descricao }).ToList());
             }
             catch (Exception ex)
@@ -460,7 +461,7 @@ namespace Kigramed.K01.Controllers
         {
             try
             {
-                var medicos = await listarMedicosEspecialidadesServices.ExecuteAsync();
+                var medicos = await listarMedicosEspecialidadesServices.Listagem();
                 return Ok(medicos.Select(m => new 
                 { 
                     id = m.Id,
