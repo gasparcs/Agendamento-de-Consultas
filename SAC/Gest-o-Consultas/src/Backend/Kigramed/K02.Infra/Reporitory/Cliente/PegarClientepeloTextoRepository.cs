@@ -8,8 +8,24 @@ namespace Kigramed.K02.Infra.Reporitory.Cliente;
 
 public class PegarClientepeloTextoRepository(KigramedDbContext context) : IPegarpeloTextoRepository<ClienteModel>
 {
-    public async Task<IEnumerable<ClienteModel>> PegarAsync(string texto,  int pagina = 1, int quantidade = 20)
+    public async Task<IEnumerable<ClienteModel>> PegarAsync(string texto, int pagina = 1, int quantidade = 20)
     {
-        return await context.Tabelatb09_cliente.Where(t => t.Nome.Contains(texto)).Include(p => p.Pacientes).Include(c => c.Contactos).Include(v => v.Pagamentos).ToListAsync();
+        try
+        {
+            return await context.Tabelatb09_cliente
+                .Where(t => t.Nome.Contains(texto))
+                .OrderBy(t => t.Nome)
+                .Skip((pagina - 1) * quantidade)
+                .Take(quantidade)
+                .Include(p => p.Pacientes)
+                .Include(c => c.Contactos)
+                .Include(v => v.Pagamentos)
+                .ToListAsync();
+        }
+        catch (Exception)
+        {
+            return [];
+        }
     }
 }
+

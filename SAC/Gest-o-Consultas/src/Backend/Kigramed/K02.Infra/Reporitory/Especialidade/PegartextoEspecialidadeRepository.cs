@@ -11,6 +11,13 @@ public class PegartextoEspecialidadeRepository(KigramedDbContext context) : IPeg
 {
     public async Task<IEnumerable<EspecialidadeModel>> PegarAsync(string texto,  int pagina = 1, int quantidade = 20)
     {
-        return await context.Tabelatb06_especialidade.Where(t => t.Nome.Contains(texto)).Include(p=> p.Servicos).Include(c => c.MedicoEspecialidades).ToListAsync();
+        return await context.Tabelatb06_especialidade
+        .Where(t => t.Nome.Contains(texto))
+        .OrderBy(t => t.Nome)
+        .Skip((pagina - 1) * quantidade)
+        .Take(quantidade)
+        .Include(p=> p.Servicos)
+        .Include(c => c.MedicoEspecialidades).
+        ToListAsync();
     }
 }
