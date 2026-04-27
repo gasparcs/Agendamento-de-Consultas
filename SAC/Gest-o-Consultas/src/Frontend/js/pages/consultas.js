@@ -119,6 +119,7 @@ function renderConsultas() {
     if (window.lucide) lucide.createIcons();
     loadConsultas();
     document.getElementById('form-consulta').addEventListener('submit', handleSaveConsulta);
+    aplicarOrigemConsulta();
 }
 
 async function loadConsultas() {
@@ -227,6 +228,17 @@ async function deleteConsulta(id) {
     } catch (error) {
         toast.error(error?.message || 'Erro ao cancelar consulta');
     }
+}
+
+function aplicarOrigemConsulta() {
+    const origem = appStore.get('consultaDraftSource');
+    if (!origem) return;
+
+    appStore.set({ consultaDraftSource: null });
+    openModal('consulta');
+
+    const nome = origem.nome ? `: ${origem.nome}` : '';
+    toast.info(`Marcar consulta a partir de ${origem.tipo}${nome}`);
 }
 
 window.renderConsultas = renderConsultas;

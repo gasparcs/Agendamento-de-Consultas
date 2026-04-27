@@ -4,26 +4,29 @@
 
 function renderEspecialidades() {
     const app = document.getElementById('app');
-    
+    const isSecretaria = String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria';
+
     app.innerHTML = `
         ${renderSidebar()}
         <div class="main-content">
             <div class="header">
                 <div>
                     <h1 class="header-title">Especialidades</h1>
-                    <p style="color: var(--gray-500);">Gestão de especialidades médicas</p>
+                    <p style="color: var(--gray-500);">Gestao de especialidades medicas</p>
                 </div>
+                ${isSecretaria ? '' : `
                 <button class="btn btn-primary" onclick="openModal('especialidade')">
                     <i data-lucide="plus"></i>
                     Nova Especialidade
                 </button>
+                `}
             </div>
-            
+
             <div class="grid grid-cols-3" id="especialidades-grid">
                 <div class="loading"><div class="spinner"></div></div>
             </div>
         </div>
-        
+
         <div class="modal-overlay" id="modal-especialidade">
             <div class="modal">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -39,8 +42,8 @@ function renderEspecialidades() {
                         <input type="text" id="esp-nome" class="form-input" placeholder="Cardiologia" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Descrição</label>
-                        <textarea id="esp-descricao" class="form-input" rows="3" placeholder="Descrição da especialidade..."></textarea>
+                        <label class="form-label">Descricao</label>
+                        <textarea id="esp-descricao" class="form-input" rows="3" placeholder="Descricao da especialidade..."></textarea>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Estado</label>
@@ -59,10 +62,12 @@ function renderEspecialidades() {
             </div>
         </div>
     `;
-    
+
     if (window.lucide) lucide.createIcons();
     loadEspecialidades();
-    document.getElementById('form-especialidade').addEventListener('submit', handleSaveEspecialidade);
+    if (!isSecretaria) {
+        document.getElementById('form-especialidade').addEventListener('submit', handleSaveEspecialidade);
+    }
 }
 
 async function loadEspecialidades() {
@@ -82,8 +87,9 @@ async function loadEspecialidades() {
 
 function renderEspecialidadesGrid(especialidades) {
     const grid = document.getElementById('especialidades-grid');
+    const isSecretaria = String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria';
     if (!grid) return;
-    
+
     if (especialidades.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-500);">
@@ -91,7 +97,7 @@ function renderEspecialidadesGrid(especialidades) {
             </div>`;
         return;
     }
-    
+
     grid.innerHTML = especialidades.map(e => `
         <div class="card animate-fade-in">
             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
@@ -106,14 +112,15 @@ function renderEspecialidadesGrid(especialidades) {
                 </div>
             </div>
             <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 8px;">
-                ${e.especialidadeDescricao || 'Sem descrição'}
+                ${e.especialidadeDescricao || 'Sem descricao'}
             </p>
             <p style="font-size: 13px; color: var(--gray-400); margin-bottom: 8px;">
-                Médicos: ${e.medicoEspecialidade?.map(m => m.funcionarioNome).join(', ') || 'Nenhum'}
+                Medicos: ${e.medicoEspecialidade?.map(m => m.funcionarioNome).join(', ') || 'Nenhum'}
             </p>
             <p style="font-size: 13px; color: var(--gray-400); margin-bottom: 16px;">
-                Serviços: ${e.servicos?.map(s => s.servicoDescricao).join(', ') || 'Nenhum'}
+                Servicos: ${e.servicos?.map(s => s.servicoDescricao).join(', ') || 'Nenhum'}
             </p>
+            ${isSecretaria ? '' : `
             <div style="display: flex; gap: 8px;">
                 <button class="btn btn-secondary" style="flex: 1;" onclick="editEspecialidade(${e.especialidadeId})">
                     <i data-lucide="edit-2"></i> Editar
@@ -122,22 +129,27 @@ function renderEspecialidadesGrid(especialidades) {
                     <i data-lucide="trash-2"></i>
                 </button>
             </div>
+            `}
         </div>
     `).join('');
-    
+
     if (window.lucide) lucide.createIcons({ node: grid });
 }
 
 async function handleSaveEspecialidade(e) {
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar especialidades');
+        return;
+    }
     e.preventDefault();
-    
+
     const id = document.getElementById('especialidade-id').value;
     const data = {
         especialidadeNome: document.getElementById('esp-nome').value,
         especialidadeDescricao: document.getElementById('esp-descricao').value,
         especialidadeEstado: document.getElementById('esp-estado').value === 'true'
     };
-    
+
     try {
         if (id) {
             await endpoints.updateEspecialidade(id, data);
@@ -154,6 +166,10 @@ async function handleSaveEspecialidade(e) {
 }
 
 function editEspecialidade(id) {
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar especialidades');
+        return;
+    }
     const especialidades = appStore.get('especialidades') || [];
     const esp = especialidades.find(e => e.especialidadeId === id);
     if (!esp) return;
@@ -168,10 +184,14 @@ function editEspecialidade(id) {
 }
 
 async function deleteEspecialidade(id) {
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar especialidades');
+        return;
+    }
     if (!confirm('Tem certeza que deseja excluir esta especialidade?')) return;
     try {
         await endpoints.deleteEspecialidade(id);
-        toast.success('Especialidade excluída com sucesso!');
+        toast.success('Especialidade excluida com sucesso!');
         loadEspecialidades();
     } catch (error) {
         toast.error(error?.message || 'Erro ao excluir especialidade');

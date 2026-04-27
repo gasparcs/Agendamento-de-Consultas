@@ -1,34 +1,37 @@
 /**
- * Kigramed Frontend - Serviços Page
+ * Kigramed Frontend - Servicos Page
  */
 
 function renderServicos() {
     const app = document.getElementById('app');
-    
+    const isSecretaria = String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria';
+
     app.innerHTML = `
         ${renderSidebar()}
         <div class="main-content">
             <div class="header">
                 <div>
-                    <h1 class="header-title">Serviços</h1>
-                    <p style="color: var(--gray-500);">Gestão de serviços médicos</p>
+                    <h1 class="header-title">Servicos</h1>
+                    <p style="color: var(--gray-500);">Gestao de servicos medicos</p>
                 </div>
+                ${isSecretaria ? '' : `
                 <button class="btn btn-primary" onclick="openModal('servico')">
                     <i data-lucide="plus"></i>
-                    Novo Serviço
+                    Novo Servico
                 </button>
+                `}
             </div>
-            
+
             <div class="card">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Preço (AOA)</th>
-                            <th>Duração (min)</th>
+                            <th>Preco (AOA)</th>
+                            <th>Duracao (min)</th>
                             <th>Estado</th>
                             <th>Especialidade</th>
-                            <th>Ações</th>
+                            <th>Acoes</th>
                         </tr>
                     </thead>
                     <tbody id="servicos-table">
@@ -39,11 +42,11 @@ function renderServicos() {
                 </table>
             </div>
         </div>
-        
+
         <div class="modal-overlay" id="modal-servico">
             <div class="modal">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="font-size: 20px; font-weight: 600;" id="modal-servico-title">Novo Serviço</h2>
+                    <h2 style="font-size: 20px; font-weight: 600;" id="modal-servico-title">Novo Servico</h2>
                     <button class="btn btn-secondary" style="padding: 8px;" onclick="closeModal('servico')">
                         <i data-lucide="x"></i>
                     </button>
@@ -56,11 +59,11 @@ function renderServicos() {
                     </div>
                     <div class="grid grid-cols-2">
                         <div class="form-group">
-                            <label class="form-label">Preço (AOA)</label>
+                            <label class="form-label">Preco (AOA)</label>
                             <input type="number" id="servico-preco" class="form-input" min="0" step="0.01">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Duração (min)</label>
+                            <label class="form-label">Duracao (min)</label>
                             <input type="number" id="servico-duracao" class="form-input" min="15" step="15">
                         </div>
                     </div>
@@ -85,10 +88,12 @@ function renderServicos() {
             </div>
         </div>
     `;
-    
+
     if (window.lucide) lucide.createIcons();
     loadServicos();
-    document.getElementById('form-servico').addEventListener('submit', handleSaveServico);
+    if (!isSecretaria) {
+        document.getElementById('form-servico').addEventListener('submit', handleSaveServico);
+    }
 }
 
 async function loadServicos() {
@@ -97,27 +102,28 @@ async function loadServicos() {
         appStore.set({ servicos });
         renderServicosTable(servicos);
     } catch (error) {
-        console.error('Erro ao carregar serviços:', error);
-        toast.error(error?.message || 'Erro ao carregar serviços');
+        console.error('Erro ao carregar servicos:', error);
+        toast.error(error?.message || 'Erro ao carregar servicos');
         document.getElementById('servicos-table').innerHTML = `
             <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                Erro ao carregar serviços
+                Erro ao carregar servicos
             </td></tr>`;
     }
 }
 
 function renderServicosTable(servicos) {
     const tbody = document.getElementById('servicos-table');
+    const isSecretaria = String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria';
     if (!tbody) return;
-    
+
     if (servicos.length === 0) {
         tbody.innerHTML = `
             <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                Nenhum serviço encontrado
+                Nenhum servico encontrado
             </td></tr>`;
         return;
     }
-    
+
     tbody.innerHTML = servicos.map(s => `
         <tr>
             <td><strong>${s.servicoNome || '-'}</strong></td>
@@ -130,24 +136,33 @@ function renderServicosTable(servicos) {
             </td>
             <td>${s.idEspecialidade || '-'}</td>
             <td>
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" style="padding: 6px 12px;" onclick='marcarConsultaServico(${s.idEspecialidade}, ${JSON.stringify(s.servicoNome || '')})'>
+                        <i data-lucide="calendar-plus"></i> Marcar Consulta
+                    </button>
+                    ${isSecretaria ? '' : `
                     <button class="btn btn-secondary" style="padding: 6px 12px;" onclick="editServico(${s.idEspecialidade}, '${s.servicoNome}')">
                         <i data-lucide="edit-2"></i>
                     </button>
                     <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteServico(${s.idEspecialidade})">
                         <i data-lucide="trash-2"></i>
                     </button>
+                    `}
                 </div>
             </td>
         </tr>
     `).join('');
-    
+
     if (window.lucide) lucide.createIcons({ node: tbody });
 }
 
 async function handleSaveServico(e) {
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar servicos');
+        return;
+    }
     e.preventDefault();
-    
+
     const id = document.getElementById('servico-id').value;
     const data = {
         servicoNome: document.getElementById('servico-nome').value,
@@ -156,23 +171,27 @@ async function handleSaveServico(e) {
         idEspecialidade: parseInt(document.getElementById('servico-especialidade').value),
         servicoEstado: document.getElementById('servico-estado').value === 'true'
     };
-    
+
     try {
         if (id) {
             await endpoints.updateServico(id, data);
-            toast.success('Serviço atualizado com sucesso!');
+            toast.success('Servico atualizado com sucesso!');
         } else {
             await endpoints.createServico(data);
-            toast.success('Serviço criado com sucesso!');
+            toast.success('Servico criado com sucesso!');
         }
         closeModal('servico');
         loadServicos();
     } catch (error) {
-        toast.error(error?.message || 'Erro ao salvar serviço');
+        toast.error(error?.message || 'Erro ao salvar servico');
     }
 }
 
 function editServico(id, nome) {
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar servicos');
+        return;
+    }
     const servicos = appStore.get('servicos') || [];
     const servico = servicos.find(s => s.idEspecialidade === id && s.servicoNome === nome);
     if (!servico) return;
@@ -184,19 +203,35 @@ function editServico(id, nome) {
     document.getElementById('servico-especialidade').value = servico.idEspecialidade;
     document.getElementById('servico-estado').value = servico.servicoEstado ? 'true' : 'false';
 
-    document.getElementById('modal-servico-title').textContent = 'Editar Serviço';
+    document.getElementById('modal-servico-title').textContent = 'Editar Servico';
     openModal('servico');
 }
 
 async function deleteServico(id) {
-    if (!confirm('Tem certeza que deseja excluir este serviço?')) return;
+    if (String(appStore.get('user')?.role || '').toLowerCase() === 'secretaria') {
+        toast.warning('Perfil secretaria nao pode editar servicos');
+        return;
+    }
+    if (!confirm('Tem certeza que deseja excluir este servico?')) return;
     try {
         await endpoints.deleteServico(id);
-        toast.success('Serviço excluído com sucesso!');
+        toast.success('Servico excluido com sucesso!');
         loadServicos();
     } catch (error) {
-        toast.error(error?.message || 'Erro ao excluir serviço');
+        toast.error(error?.message || 'Erro ao excluir servico');
     }
 }
 
+function marcarConsultaServico(idEspecialidade, nomeServico) {
+    appStore.set({
+        consultaDraftSource: {
+            tipo: 'servico',
+            idEspecialidade,
+            nome: nomeServico || ''
+        }
+    });
+    router.navigate('consultas');
+}
+
 window.renderServicos = renderServicos;
+window.marcarConsultaServico = marcarConsultaServico;

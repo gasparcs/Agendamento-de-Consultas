@@ -1,31 +1,25 @@
 /**
  * Kigramed Frontend - Main Application Entry Point
  */
-// Imports
-// Imports
 
-// Inicializar ícones Lucide
 document.addEventListener('DOMContentLoaded', () => {
     if (window.lucide) {
         lucide.createIcons();
     }
 });
 
-// Restaurar credenciais ao carregar
 function initializeAuth() {
     const creds = authManager.getCredentials();
-    
+
     if (creds && authManager.isTokenValid()) {
-        // Token ainda é válido
         appStore.set({
             token: creds.token,
             user: creds.user,
             isAuthenticated: true
         });
-        console.log('✓ Credenciais restauradas da sessão anterior');
+        console.log('Credenciais restauradas da sessao anterior');
     } else if (creds) {
-        // Token expirou
-        console.warn('⚠ Token expirado');
+        console.warn('Token expirado');
         authManager.clearCredentials();
         appStore.set({
             token: null,
@@ -35,14 +29,30 @@ function initializeAuth() {
     }
 }
 
-// Proteção de rotas (require autenticação)
 const protectedRoutes = [
-    'dashboard', 'clientes', 'pacientes', 'consultas', 
-    'especialidades', 'servicos', 'funcionarios', 'pagamentos', 
-    'relatorios', 'configuracoes'
+    'dashboard', 'clientes', 'pacientes', 'consultas',
+    'especialidades', 'servicos', 'funcionarios', 'pagamentos',
+    'configuracoes'
 ];
 
-// Configurar rotas
+const allowedRoutesByRole = {
+    admin: new Set(protectedRoutes),
+    secretaria: new Set(['dashboard', 'clientes', 'pacientes', 'consultas', 'especialidades', 'servicos']),
+    medico: new Set(['dashboard', 'consultas'])
+};
+
+function getCurrentRole() {
+    const roleFromStore = appStore.get('user')?.role;
+    const roleFromCreds = authManager.getCredentials()?.user?.role;
+    return String(roleFromStore || roleFromCreds || 'admin').toLowerCase();
+}
+
+function canAccessRoute(path) {
+    const role = getCurrentRole();
+    const allowed = allowedRoutesByRole[role] || allowedRoutesByRole.admin;
+    return allowed.has(path);
+}
+
 router.addRoute('login', renderLoginPage);
 router.addRoute('dashboard', renderDashboard);
 router.addRoute('clientes', renderClientes);
@@ -52,26 +62,27 @@ router.addRoute('especialidades', renderEspecialidades);
 router.addRoute('servicos', renderServicos);
 router.addRoute('funcionarios', renderFuncionarios);
 router.addRoute('pagamentos', renderPagamentos);
-router.addRoute('relatorios', renderRelatorios);
 router.addRoute('configuracoes', renderConfiguracoes);
 
-// Callback de mudança de rota
 router.onChange((path) => {
-    // Verificar se rota protegida
     if (protectedRoutes.includes(path) && !appStore.get('isAuthenticated')) {
-        console.warn('❌ Rota protegida. Redirecionando para login...');
+        console.warn('Rota protegida. Redirecionando para login...');
         router.navigate('login');
         return;
     }
-    
+
+    if (protectedRoutes.includes(path) && !canAccessRoute(path)) {
+        toast.warning('Voce nao tem permissao para acessar esta pagina');
+        router.navigate('dashboard');
+        return;
+    }
+
     appStore.set({ currentPage: path });
 });
 
-// Inicializar autenticação e depois iniciar router
 initializeAuth();
 router.start();
 
-// Funções globais para modais
 function openModal(name) {
     const modal = document.getElementById(`modal-${name}`);
     if (modal) {
@@ -83,19 +94,16 @@ function closeModal(name) {
     const modal = document.getElementById(`modal-${name}`);
     if (modal) {
         modal.classList.remove('active');
-        // Limpar formulário
         const form = modal.querySelector('form');
         if (form) form.reset();
     }
 }
 
-// Fechar modal ao clicar fora
 document.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-overlay')) {
         e.target.classList.remove('active');
     }
 });
 
-// Exportar funções globais
 window.openModal = openModal;
 window.closeModal = closeModal;
