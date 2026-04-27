@@ -147,6 +147,10 @@ const endpoints = {
     // ===== MEDICO =====
     getConsultasMedico: () => api.get('/medico/consultas'),
     updateConsultaMedico: (id, data) => api.put(`/medico/consulta/${id}`, data),
+
+    // ===== DROPDOWNS (Para formulários) =====
+    getEstadosConsulta: () => api.get('/admin/dropdown/estados-consulta'),
+    getMedicosEspecialidades: () => api.get('/admin/dropdown/medicos-especialidades'),
 };
 
 window.api = api;

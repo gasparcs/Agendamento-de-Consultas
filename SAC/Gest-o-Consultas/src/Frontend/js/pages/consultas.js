@@ -81,18 +81,24 @@ function renderConsultas() {
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">ID Médico Especialidade *</label>
-                        <input type="number" id="consulta-medico-especialidade" class="form-input" placeholder="ID da especialidade do médico" required>
+                        <label class="form-label">Médico & Especialidade *</label>
+                        <select id="consulta-medico-especialidade" class="form-input" required>
+                            <option value="">Selecione um médico e especialidade</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ID Serviço *</label>
-                        <input type="number" id="consulta-servico" class="form-input" placeholder="ID do serviço" required>
+                        <label class="form-label">Serviço *</label>
+                        <select id="consulta-servico" class="form-input" required>
+                            <option value="">Carregando serviços...</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ID Paciente *</label>
-                        <input type="number" id="consulta-paciente" class="form-input" placeholder="ID do paciente" required>
+                        <label class="form-label">Paciente *</label>
+                        <select id="consulta-paciente" class="form-input" required>
+                            <option value="">Carregando pacientes...</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -240,5 +246,58 @@ function aplicarOrigemConsulta() {
     const nome = origem.nome ? `: ${origem.nome}` : '';
     toast.info(`Marcar consulta a partir de ${origem.tipo}${nome}`);
 }
+
+/**
+ * Carrega os dropdowns do formulário de consulta
+ */
+async function loadConsultaDropdowns() {
+    try {
+        // Carregar estados de consulta
+        const estados = await endpoints.getEstadosConsulta();
+        const estadoSelect = document.getElementById('consulta-estado');
+        if (estadoSelect) {
+            estadoSelect.innerHTML = '<option value="">Selecione um estado</option>' +
+                estados.map(e => `<option value="${e.id}">${e.descricao}</option>`).join('');
+        }
+
+        // Carregar médicos e especialidades
+        const medicos = await endpoints.getMedicosEspecialidades();
+        const medicoSelect = document.getElementById('consulta-medico-especialidade');
+        if (medicoSelect) {
+            medicoSelect.innerHTML = '<option value="">Selecione um médico e especialidade</option>' +
+                medicos.map(m => `<option value="${m.id}">${m.nomeMedico} - ${m.especialidade}</option>`).join('');
+        }
+
+        // Carregar serviços
+        const servicos = await endpoints.getServicosByRole();
+        const servicoSelect = document.getElementById('consulta-servico');
+        if (servicoSelect) {
+            servicoSelect.innerHTML = '<option value="">Selecione um serviço</option>' +
+                servicos.map(s => `<option value="${s.id}">${s.servico_nome || s.id}</option>`).join('');
+        }
+
+        // Carregar pacientes
+        const pacientes = await endpoints.getPacientesByRole();
+        const pacienteSelect = document.getElementById('consulta-paciente');
+        if (pacienteSelect) {
+            pacienteSelect.innerHTML = '<option value="">Selecione um paciente</option>' +
+                pacientes.map(p => `<option value="${p.id}">${p.paciente_nome || p.id}</option>`).join('');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dropdowns:', error);
+        toast.error('Erro ao carregar opções de formulário');
+    }
+}
+
+/**
+ * Sobrescreve openModal para carregar dropdowns quando modal de consulta é aberto
+ */
+const originalOpenModal = window.openModal || function() {};
+window.openModal = function(type) {
+    originalOpenModal(type);
+    if (type === 'consulta') {
+        loadConsultaDropdowns();
+    }
+};
 
 window.renderConsultas = renderConsultas;
