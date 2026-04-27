@@ -19,6 +19,7 @@ using Kigramed.K03.Application.FuncionarioUseCase.Comand;
 using Kigramed.K03.Application.FuncionarioUseCase.Queries;
 using Kigramed.K03.Application.PacienteUseCase.Comand;
 using Kigramed.K03.Application.PacienteUseCase.Queries;
+using Kigramed.K03.Application.PagamentoUseCase.Queries;
 using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
@@ -43,6 +44,12 @@ using System.Text;
 using Kigramed;
 using Kigramed.K02.Infra.Servicos.SmsService;
 using Kigramed.K03.Application.Servico.ISmsService;
+using Kigramed.K04.Domain.D13.EstadoConsulta;
+using Kigramed.K02.Infra.Reporitory.EstadoConsulta;
+using Kigramed.K04.Domain.D07.MedicoEspecialidade;
+using Kigramed.K02.Infra.Reporitory.MedicoEspecialidade;
+using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
+using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,6 +125,10 @@ builder.Services.AddScoped<IPasswordVerify, PasswordVerifyService>();
 builder.Services.AddScoped<IPasswordCreate, PasswordCreateService>(); 
 builder.Services.AddScoped<IPasswordHash, PasswordHashService>();     
 builder.Services.AddHttpClient<ISmsService, SmsService>();
+
+builder.Services.AddScoped<IListagemRepository<EstadoConsultaModel>, ListarEstadoConsulta>();
+
+builder.Services.AddScoped<IListagemRepository<MedicoEspecilidadeModel>, ListarMedicoEspecialidade>();
 
 // Configurar CORS para Frontend
 builder.Services.AddCors(options =>
@@ -199,6 +210,12 @@ builder.Services.AddTransient<PegarPacientePeloTexto>();
 builder.Services.AddTransient<AdicionarConsulta>();
 builder.Services.AddTransient<AtualizarConsulta>();
 builder.Services.AddTransient<ListarConsultas>();
+//casos de uso pagamentomodel
+builder.Services.AddTransient<ListarPagamentos>();
+
+builder.Services.AddTransient<ListarEstados>();
+
+builder.Services.AddTransient<ListarMedicos>();
 
 var app = builder.Build();
 

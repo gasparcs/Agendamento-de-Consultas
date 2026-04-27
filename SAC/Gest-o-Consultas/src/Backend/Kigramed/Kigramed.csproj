@@ -17,8 +17,10 @@
     <Folder Include="K01.Controllers\" />
     <Folder Include="K02.Infra\Data\" />
     <Folder Include="K02.Infra\Reporitory\Cliente\" />
+    <Folder Include="K02.Infra\Reporitory\EstadoConsulta\" />
     <Folder Include="K02.Infra\Reporitory\Ferfil\" />
     <Folder Include="K02.Infra\Reporitory\Funcionario\" />
+    <Folder Include="K02.Infra\Reporitory\MedicoEspecialidade\" />
     <Folder Include="K02.Infra\Reporitory\Paciente\" />
     <Folder Include="K02.Infra\Reporitory\Pagamento\" />
     <Folder Include="K02.Infra\Reporitory\Servico\" />
@@ -36,10 +38,16 @@
     <Folder Include="K03.Application\EspecialidadeUseCase\Comand\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\DTO\" />
     <Folder Include="K03.Application\EspecialidadeUseCase\Queries\" />
+    <Folder Include="K03.Application\EstadoConsultaUseCase\" />
+    <Folder Include="K03.Application\EstadoConsultaUseCase\DTO\" />
+    <Folder Include="K03.Application\EstadoConsultaUseCase\Queries\" />
     <Folder Include="K03.Application\FuncionarioUseCase\" />
     <Folder Include="K03.Application\FuncionarioUseCase\Comand\" />
     <Folder Include="K03.Application\FuncionarioUseCase\DTO\" />
     <Folder Include="K03.Application\FuncionarioUseCase\Queries\" />
+    <Folder Include="K03.Application\MedicoEspecialidadeUseCase\" />
+    <Folder Include="K03.Application\MedicoEspecialidadeUseCase\DTO\" />
+    <Folder Include="K03.Application\MedicoEspecialidadeUseCase\Queries\" />
     <Folder Include="K03.Application\PacienteUseCase\Comand\" />
     <Folder Include="K03.Application\PacienteUseCase\Queries\" />
     <Folder Include="K03.Application\PerfilUseCase\" />

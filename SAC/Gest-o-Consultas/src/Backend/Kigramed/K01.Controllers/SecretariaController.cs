@@ -5,9 +5,12 @@ using Kigramed.K03.Application.ConsultaUseCase.Comand;
 using Kigramed.K03.Application.ConsultaUseCase.DTO;
 using Kigramed.K03.Application.ConsultaUseCase.Queries;
 using Kigramed.K03.Application.EspecialidadeUseCase.Queries;
+using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
+using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 using Kigramed.K03.Application.PacienteUseCase.Comand;
 using Kigramed.K03.Application.PacienteUseCase.DTO;
 using Kigramed.K03.Application.PacienteUseCase.Queries;
+using Kigramed.K03.Application.PagamentoUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +46,12 @@ namespace Kigramed.K01.Controllers
 
       ListarEspecialidades listarespecialidadesServices,
       PegarEspecialidadePeloId pegaridespecialidadeServices,
-      PegarEspecialidadePeloTexto pegartextoespecialidadeServices
+      PegarEspecialidadePeloTexto pegartextoespecialidadeServices,
+
+      ListarEstados listarestadosServices,
+      ListarPagamentos listarpagamentosServices,
+
+        ListarMedicos listarmedicosServices
     )
     : ControllerBase
     {
@@ -231,6 +239,27 @@ namespace Kigramed.K01.Controllers
             var resposta = await pegartextoespecialidadeServices.ExecuteAsync(texto);
             return resposta is null ? StatusCode(404, "Nenhuma especialidade encontrada com o texto fornecido"):
             Ok(resposta);
+        }
+
+        //---------------estado---------------//
+         public async Task<IActionResult> ListarEstados()
+        {
+            var resposta = await listarestadosServices.ExecuteAsync();
+            return Ok(resposta);
+        }
+        
+        [HttpGet("pagamento")]
+        public async Task<IActionResult> ListarPagamentos()
+        {
+            var resposta = await listarpagamentosServices.ExecuteAsync();
+            return Ok(resposta);
+        }
+
+        //----------------medicos------------//
+         public async Task<IActionResult> Listarmedicos()
+        {
+            var resposta = await listarmedicosServices.ExecuteAsync();
+            return Ok(resposta);
         }
        
 

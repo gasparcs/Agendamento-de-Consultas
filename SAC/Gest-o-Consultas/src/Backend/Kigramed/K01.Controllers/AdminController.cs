@@ -1,3 +1,4 @@
+using Kigramed.K02.Infra.Reporitory.EstadoConsulta;
 using Kigramed.K03.Application.ClienteUseCase.Comand;
 using Kigramed.K03.Application.ClienteUseCase.DTO;
 using Kigramed.K03.Application.ClienteUseCase.Queries;
@@ -7,12 +8,15 @@ using Kigramed.K03.Application.ConsultaUseCase.Queries;
 using Kigramed.K03.Application.EspecialidadeUseCase.Comand;
 using Kigramed.K03.Application.EspecialidadeUseCase.DTO;
 using Kigramed.K03.Application.EspecialidadeUseCase.Queries;
+using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
 using Kigramed.K03.Application.FuncionarioUseCase.Comand;
 using Kigramed.K03.Application.FuncionarioUseCase.DTO;
 using Kigramed.K03.Application.FuncionarioUseCase.Queries;
+using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 using Kigramed.K03.Application.PacienteUseCase.Comand;
 using Kigramed.K03.Application.PacienteUseCase.DTO;
 using Kigramed.K03.Application.PacienteUseCase.Queries;
+using Kigramed.K03.Application.PagamentoUseCase.Queries;
 using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.DTO;
@@ -60,6 +64,11 @@ namespace Kigramed.K01.Controllers
 
 
         ListarPerfis listarperfisServices,
+
+        ListarEstados listarestadosServices,
+        ListarPagamentos listarpagamentosServices,
+
+        ListarMedicos listarmedicosServices,
 
         AdicionarServico adicionarservicoServices,
         AtualizarServico atualizarservicoServices,
@@ -278,7 +287,7 @@ namespace Kigramed.K01.Controllers
 
         //------------------ paciente ----------------//
 
-         [HttpPost]
+         [HttpPost("paciente")]
         public async Task<IActionResult> AdicionarPaciente(AdicionarPacienteDTO dto)
         {
             if(!ModelState.IsValid)
@@ -338,6 +347,29 @@ namespace Kigramed.K01.Controllers
         public async Task<IActionResult> ListarPerfis()
         {
             var resposta = await listarperfisServices.ExecuteAsync();
+            return Ok(resposta);
+        }
+
+        //---------------estado---------------//
+        [HttpGet("estados")]
+         public async Task<IActionResult> ListarEstados()
+        {
+            var resposta = await listarestadosServices.ExecuteAsync();
+            return Ok(resposta);
+        }
+
+        [HttpGet("pagamento")]
+        public async Task<IActionResult> ListarPagamentos()
+        {
+            var resposta = await listarpagamentosServices.ExecuteAsync();
+            return Ok(resposta);
+        }
+
+        //----------------medicos------------//
+        [HttpGet("medicos")]
+         public async Task<IActionResult> Listarmedicos()
+        {
+            var resposta = await listarmedicosServices.ExecuteAsync();
             return Ok(resposta);
         }
 
