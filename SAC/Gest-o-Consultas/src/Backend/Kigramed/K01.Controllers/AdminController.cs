@@ -21,8 +21,6 @@ using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.DTO;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
-using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
-using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
