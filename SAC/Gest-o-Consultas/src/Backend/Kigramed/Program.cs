@@ -43,6 +43,10 @@ using System.Text;
 using Kigramed;
 using Kigramed.K02.Infra.Servicos.SmsService;
 using Kigramed.K03.Application.Servico.ISmsService;
+using Kigramed.K02.Infra.Reporitory.EstadoConsulta;
+using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
+using Kigramed.K02.Infra.Reporitory.MedicoEspecialidade;
+using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -150,6 +154,12 @@ builder.Services.AddScoped<IPegarpeloId<ServicoModel>, PegarIdServicoRepository>
 builder.Services.AddScoped<IPegarpeloTextoRepository<ServicoModel>, PegarTextoServicoRepository>();
 builder.Services.AddScoped<IRemoverRepository<ServicoModel>, RemoverServicoRepository>();
 
+//Contratos para EstadoConsulta
+builder.Services.AddScoped<IListarEstadoConsultaRepository, ListarEstadoConsultaRepository>();
+
+//Contratos para MedicoEspecialidade
+builder.Services.AddScoped<IListarMedicoEspecialidadeRepository, ListarMedicoEspecialidadeRepository>();
+
 //casos de usos cliendemodel
 builder.Services.AddTransient<AdicionarCliente>();
 builder.Services.AddTransient<AtualizarCliente>();
@@ -199,6 +209,12 @@ builder.Services.AddTransient<PegarPacientePeloTexto>();
 builder.Services.AddTransient<AdicionarConsulta>();
 builder.Services.AddTransient<AtualizarConsulta>();
 builder.Services.AddTransient<ListarConsultas>();
+
+//casos de uso EstadoConsulta
+builder.Services.AddTransient<ListarEstadosConsulta>();
+
+//casos de uso MedicoEspecialidade
+builder.Services.AddTransient<ListarMedicosEspecialidades>();
 
 var app = builder.Build();
 

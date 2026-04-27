@@ -17,6 +17,8 @@ using Kigramed.K03.Application.PerfilUseCase.Queries;
 using Kigramed.K03.Application.ServicoUseCase.Comand;
 using Kigramed.K03.Application.ServicoUseCase.DTO;
 using Kigramed.K03.Application.ServicoUseCase.Queries;
+using Kigramed.K03.Application.EstadoConsultaUseCase.Queries;
+using Kigramed.K03.Application.MedicoEspecialidadeUseCase.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +68,10 @@ namespace Kigramed.K01.Controllers
         RemoverServico removerservicoServices,
         ListarServicos listarservicoServico,
         PegarServicoPeloId pegarservicoidServices,
-        PegarServicoPeloTexto pegarservicotextoServices
+        PegarServicoPeloTexto pegarservicotextoServices,
+
+        ListarEstadosConsulta listarEstadosConsultaServices,
+        ListarMedicosEspecialidades listarMedicosEspecialidadesServices
     
       )
       : ControllerBase
@@ -394,6 +399,50 @@ namespace Kigramed.K01.Controllers
             var resposta = await pegarservicotextoServices.ExecuteAsync(texto);
             return resposta is null ? StatusCode(404, "Nenhum servico encontrado com o texto fornecido"):
             Ok(resposta);
+        }
+
+        //-------------- Endpoints para Dropdowns (Consulttas) -----------//
+
+        /// <summary>
+        /// Obtém todos os estados de consulta para preencher dropdown
+        /// </summary>
+        [HttpGet("dropdown/estados-consulta")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetEstadosConsulta()
+        {
+            try
+            {
+                var estados = await listarEstadosConsultaServices.ExecuteAsync();
+                return Ok(estados.Select(e => new { id = e.Id, descricao = e.Descricao }).ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao carregar estados de consulta", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Obtém todos os médicos e suas especialidades para preencher dropdown
+        /// </summary>
+        [HttpGet("dropdown/medicos-especialidades")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetMedicosEspecialidades()
+        {
+            try
+            {
+                var medicos = await listarMedicosEspecialidadesServices.ExecuteAsync();
+                return Ok(medicos.Select(m => new 
+                { 
+                    id = m.Id,
+                    nomeMedico = m.Funcionario?.Nome ?? "N/A",
+                    especialidade = m.Especialidade?.Nome ?? "N/A",
+                    nifMedico = m.Funcionario?.Nif ?? "N/A"
+                }).ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao carregar médicos e especialidades", error = ex.Message });
+            }
         }
     }
 }
