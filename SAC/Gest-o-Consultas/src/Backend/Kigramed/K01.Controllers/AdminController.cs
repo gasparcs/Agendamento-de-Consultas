@@ -35,6 +35,7 @@ namespace Kigramed.K01.Controllers
 
       AdicionarConsulta adicionarconsultServices,
       ListarConsultas listarconsultaServices,
+      AtualizarConsulta atualizarconsultaServices,
 
       AdicionarEspecialidade adicionarespecialidadeServices,
       AtualizarEspecialidade atualizarespecialidadeServices,
@@ -70,7 +71,7 @@ namespace Kigramed.K01.Controllers
       )
       : ControllerBase
     {
-
+       
         // ------------ Cliente -----------//
         //método adicionar
         [HttpPost("cliente")]
@@ -158,14 +159,8 @@ namespace Kigramed.K01.Controllers
             if (id != dto.Id)
                 return StatusCode(400, "ID da consulta não corresponde");
 
-            var resposta = await adicionarconsultServices.ExecuteAsync(new AdicionarConsultaDTO
-            {
-                IdMedicoEspecialidade = int.Parse(dto.Consulta_medico_especialiade),
-                IdServico = int.Parse(dto.Consultaservico),
-                IdPaciente = int.Parse(dto.Consultapaciente),
-                IdEstado = dto.ConsultaEstado ? 1 : 0,
-                DataConsulta = dto.ConsultaData
-            });
+            dto.Id = id;
+            var resposta = await atualizarconsultaServices.ExecuteAsync(dto);
             return resposta.Contains("sucesso") ? StatusCode(200, resposta) : StatusCode(400, resposta);
         }
 
