@@ -76,10 +76,8 @@ namespace Kigramed.K01.Controllers
         RemoverServico removerservicoServices,
         ListarServicos listarservicoServico,
         PegarServicoPeloId pegarservicoidServices,
-        PegarServicoPeloTexto pegarservicotextoServices,
+        PegarServicoPeloTexto pegarservicotextoServices
 
-        ListarEstadoConsulta listarEstadosConsultaServices,
-        ListarMedicoEspecialidade listarMedicosEspecialidadesServices
     
       )
       : ControllerBase
@@ -441,39 +439,16 @@ namespace Kigramed.K01.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetEstadosConsulta()
         {
-            try
-            {
-                var estados = await listarEstadosConsultaServices.Listagem();
-                return Ok(estados.Select(e => new { id = e.Id, descricao = e.Descricao }).ToList());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Erro ao carregar estados de consulta", error = ex.Message });
-            }
+              var estados = await listarestadosServices.ExecuteAsync();
+              return Ok(estados);
         }
 
-        /// <summary>
-        /// Obtém todos os médicos e suas especialidades para preencher dropdown
-        /// </summary>
         [HttpGet("dropdown/medicos-especialidades")]
         [AllowAnonymous]
         public async Task<IActionResult> GetMedicosEspecialidades()
         {
-            try
-            {
-                var medicos = await listarMedicosEspecialidadesServices.Listagem();
-                return Ok(medicos.Select(m => new 
-                { 
-                    id = m.Id,
-                    nomeMedico = m.Funcionario?.Nome ?? "N/A",
-                    especialidade = m.Especialidade?.Nome ?? "N/A",
-                    nifMedico = m.Funcionario?.Nif ?? "N/A"
-                }).ToList());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Erro ao carregar médicos e especialidades", error = ex.Message });
-            }
+              var medicos = await listarmedicosServices.ExecuteAsync();
+             return Ok(medicos);
         }
     }
 }
