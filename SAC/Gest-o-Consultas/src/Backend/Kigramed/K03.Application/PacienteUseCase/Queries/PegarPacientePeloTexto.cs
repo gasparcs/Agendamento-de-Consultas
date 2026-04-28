@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Kigramed.K03.Application.PacienteUseCase.DTO;
 using Kigramed.K04.Domain.D12.Paciente;
 using Kigramed.K04.Domain.Interfaces;
@@ -22,20 +23,20 @@ public class PegarPacientePeloTexto(IPegarpeloTextoRepository<PacienteModel> rep
 
             PacienteData_nascimento= p.Data_nascimento,
 
-            Cliente_Paciente = p.ClientePaciente.Descricao,
+            Cliente_Paciente = p.ClientePaciente?.Descricao ?? string.Empty,
 
-            Cliente = p.Cliente.Nome,
+            Cliente = p.Cliente?.Nome ?? string.Empty,
 
-            Genero = p.Genero.Nome,
+            Genero = p.Genero?.Nome ?? string.Empty,
 
-            Consultas = p.Consultas.Select( c => new ConsultaDTO
+            Consultas = p.Consultas?.Select( c => new ConsultaDTO
             {
                 IdConsuta = c.Id,
 
                 Data_Consulta = c.Data_consulta,
 
-                Estado = c.EstadoConsulta.Descricao
-            })
+                Estado = c.EstadoConsulta?.Descricao ?? string.Empty
+            }) ?? Enumerable.Empty<ConsultaDTO>()
     
         });
     }

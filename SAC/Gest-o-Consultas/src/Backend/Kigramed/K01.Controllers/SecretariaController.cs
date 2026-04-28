@@ -137,7 +137,7 @@ namespace Kigramed.K01.Controllers
 
          //------------------ paciente ----------------//
 
-         [HttpPost]
+         [HttpPost("paciente")]
         public async Task<IActionResult> AdicionarPaciente(AdicionarPacienteDTO dto)
         {
             if(!ModelState.IsValid)

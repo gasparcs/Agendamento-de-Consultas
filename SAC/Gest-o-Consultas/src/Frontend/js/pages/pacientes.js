@@ -142,11 +142,14 @@ async function handleSavePaciente(e) {
     e.preventDefault();
     
     const id = document.getElementById('paciente-id').value;
+    const generoValue = document.getElementById('paciente-genero').value;
+    const generoMap = { Masculino: 1, Feminino: 2 };
     const data = {
-        pacienteNome: document.getElementById('paciente-nome').value,
-        pacienteData_nascimento: document.getElementById('paciente-datanasc').value,
-        genero: document.getElementById('paciente-genero').value,
-        clienteNif: document.getElementById('paciente-cliente').value
+        PacienteNome: document.getElementById('paciente-nome').value,
+        PacienteData_nascimento: document.getElementById('paciente-datanasc').value,
+        IdGenero: generoMap[generoValue] || 0,
+        IdCliente: document.getElementById('paciente-cliente').value,
+        IdCliente_Paciente: 1
     };
     
     try {

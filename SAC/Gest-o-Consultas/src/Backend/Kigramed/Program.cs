@@ -199,7 +199,11 @@ builder.Services.AddTransient<PegarServicoPeloId>();
 builder.Services.AddTransient<PegarServicoPeloTexto>();
 
 //casos de uso pacientemodel
-builder.Services.AddTransient<AdicionarPaciente>();
+builder.Services.AddTransient<AdicionarPaciente>(provider => 
+    new AdicionarPaciente(
+        provider.GetRequiredService<IAdicionarRepository<PacienteModel>>(),
+        provider.GetRequiredService<KigramedDbContext>()
+    ));
 builder.Services.AddTransient<AtualizarPaciente>();
 builder.Services.AddTransient<RemoverPaciente>();
 builder.Services.AddTransient<ListarPacientes>();

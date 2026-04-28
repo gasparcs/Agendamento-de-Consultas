@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Kigramed.K02.Infra.Data;
 using Kigramed.K04.Domain.D15.Consulta;
 using Kigramed.K04.Domain.Interfaces;
@@ -15,6 +16,7 @@ public class ListarConsultaRepository(KigramedDbContext context) : IListagemRepo
         .Include(s => s.Servico)
         .Include(p => p.Paciente).ThenInclude(c => c.Cliente)
         .Include(e => e.EstadoConsulta)
+        .OrderByDescending(c => c.Id)
         .Skip((pagina - 1) * quantidade)
         .Take(quantidade)
         .ToListAsync();

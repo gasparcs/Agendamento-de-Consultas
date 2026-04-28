@@ -149,6 +149,16 @@ public class KigramedDbContext(DbContextOptions<KigramedDbContext> options) : Db
                  entity.HasOne(mc => mc.Consulta).WithOne(c => c.MedicoConsulta).HasForeignKey<MedicoConsultaModel>(fk => fk.Id_consulta);
         });
 
+        // Seed data para garantir valores padrão
+        modelBuilder.Entity<GeneroModel>().HasData(
+            new GeneroModel { Id = 1, Nome = "Masculino" },
+            new GeneroModel { Id = 2, Nome = "Feminino" }
+        );
+
+        modelBuilder.Entity<ClientePacienteModel>().HasData(
+            new ClientePacienteModel { Id = 1, Descricao = "Paciente Direto" },
+            new ClientePacienteModel { Id = 2, Descricao = "Dependente" }
+        );
 
     }
 }
